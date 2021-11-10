@@ -1,0 +1,31 @@
+---
+title: "Deep and Statistical Learning WS 21-22"
+output: 
+  github_document:
+    default
+  pdf_document:
+    default
+knit: (function(inputFile, encoding) {
+  rmarkdown::render(inputFile, encoding = encoding,
+  output_format = "all") })
+
+---
+
+Hello World!
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      eval = FALSE)
+```
+
+
+```{r, include=TRUE, eval = FALSE}
+library(dplyr)
+library(here)
+library(stringr)
+library(data.table)
+library(scoringutils)
+library(purrr)
+library(tidyr)
+```
