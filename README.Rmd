@@ -11,7 +11,15 @@ knit: (function(inputFile, encoding) {
 
 ---
 
-Hello World!
+# Analysis of Berlins Airbnb Data using statistical and deep learning methods. 
+
+## Data
+- http://insideairbnb.com/berlin/
+- http://insideairbnb.com/get-the-data.html
+
+Data last downloaded 10.11.21
+
+
 
 
 ```{r setup, include=FALSE}

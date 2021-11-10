@@ -3,7 +3,7 @@
     "path": "C:/Users/Sebastian/OneDrive/Applied Statistics/5. Semester/Berlin-SDL-WS2122/README.Rmd",
     "project_path": "README.Rmd",
     "type": "r_markdown",
-    "hash": "3978593433",
+    "hash": "3714644859",
     "contents": "",
     "dirty": false,
     "created": 1636544643694.0,
@@ -13,15 +13,15 @@
         "tempName": "Untitled1",
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "13,12",
-        "scrollLine": "3"
+        "cursorPosition": "21,0",
+        "scrollLine": "4"
     },
     "folds": "",
-    "lastKnownWriteTime": 1636545122,
+    "lastKnownWriteTime": 1636547064,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1636545122115,
+    "last_content_update": 1636547064029,
     "read_only": false,
     "read_only_alternatives": []
 }
