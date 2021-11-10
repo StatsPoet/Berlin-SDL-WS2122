@@ -1,2 +1,14 @@
-# Berlin-SDL-WS2122
-Analyse Airbnb Data using statistical and deep learning techniques for the equally named seminar. Göttingen WS 21-22
+Deep and Statistical Learning WS 21-22
+================
+
+Hello World!
+
+``` r
+library(dplyr)
+library(here)
+library(stringr)
+library(data.table)
+library(scoringutils)
+library(purrr)
+library(tidyr)
+```
