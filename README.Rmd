@@ -70,3 +70,10 @@ library(scoringutils)
 library(purrr)
 library(tidyr)
 ```
+
+ToDo for the 17.11
+
+-   watch lecture videos
+-   look through data analysis example on on jupiter notebook
+    and think of possible research questions
+-   write down any questions that come up
