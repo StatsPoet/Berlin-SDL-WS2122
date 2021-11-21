@@ -11,6 +11,23 @@ knit: (function(inputFile, encoding) {
 
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, 
+                      eval = FALSE)
+```
+
+
+```{r, include=F, eval = FALSE}
+library(dplyr)
+library(here)
+library(stringr)
+library(data.table)
+library(scoringutils)
+library(purrr)
+library(tidyr)
+```
+
+
 # Analysis of Berlins Airbnb Data using statistical and deep learning methods. 
 
 ## Data
@@ -55,24 +72,7 @@ In addition, many city or state legislation or ordinances that address residenti
 
 
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, 
-                      eval = FALSE)
-```
-
-
-```{r, include=TRUE, eval = FALSE}
-library(dplyr)
-library(here)
-library(stringr)
-library(data.table)
-library(scoringutils)
-library(purrr)
-library(tidyr)
-```
-
-
-Notizen für die QnA vom 15.11
+## Notizen für die QnA vom 15.11
 
 -   Ein wichtiger Teil ist Daten einlesen
 
@@ -97,7 +97,7 @@ Notizen für die QnA vom 15.11
 -   Modelle sollen so geschrieben werden dass es sie auf die neue Stadt angepasst werden kann
 
 
-ToDo for the 20/21.11
+## ToDo for the 20/21.11
 
 -   watch lecture videos (Seb)
 -   look through data analysis example on on jupiter notebook
@@ -107,10 +107,9 @@ ToDo for the 20/21.11
 -   Download Gitkraken (Seb/Tobi)
 -   Agree on some questions for the talk with the prof as given below
 
-DeepL 3Blue1Brown Link: 
--   https://github.com/mnielsen/neural-networks-and-deep-learning
+[DeepL 3Blue1Brown Link](https://github.com/mnielsen/neural-networks-and-deep-learning)
 
-Important Dates
+## Important Dates
 
 -   QnA session: 13/12 17/01
 -   Group presentation 20/02 – 21/02, 09.00–12.00
