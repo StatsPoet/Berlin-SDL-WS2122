@@ -107,7 +107,9 @@ In addition, many city or state legislation or ordinances that address residenti
 -   Download Gitkraken (Seb/Tobi)
 -   Agree on some questions for the talk with the prof as given below
 
-[DeepL 3Blue1Brown Link](https://github.com/mnielsen/neural-networks-and-deep-learning)
+## Dataset of labeled handwritten digits
+-   http://yann.lecun.com/exdb/mnist/
+-   https://rpubs.com/Argaadya/nn-mnist (Code)
 
 ## Important Dates
 
@@ -124,7 +126,9 @@ Questions for the talk with prof:
 -   can we use packages?
 -   how are the different models going to be compared, if we have different 
     research questions?
--   Which form should a research questions have?
+-   What is meant by "interpretable" exactly?
+-   Do we have to cite papers?
+
 
 Possible research questions: 
 -   Will a certain host list a new flat in the next weeks/month/years?
