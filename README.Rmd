@@ -110,6 +110,8 @@ In addition, many city or state legislation or ordinances that address residenti
 ## Dataset of labeled handwritten digits
 -   http://yann.lecun.com/exdb/mnist/
 -   https://rpubs.com/Argaadya/nn-mnist (Code)
+-   https://www.kaggle.com/c/digit-recognizer/overview/description
+-   https://www.kaggle.com/russwill/build-your-own-neural-network-in-r
 
 ## Important Dates
 
@@ -123,9 +125,11 @@ In addition, many city or state legislation or ordinances that address residenti
 
 Questions for the talk with prof:
 
--   can we use packages?
--   how are the different models going to be compared, if we have different 
+-   Should we implement the neural nets from scratch or 
+    can we use every package we want?
+-   How are the different models going to be compared, if we have different 
     research questions?
+-   How many variables should we use ?
 -   What is meant by "interpretable" exactly?
 -   Do we have to cite papers?
 
@@ -135,3 +139,4 @@ Possible research questions:
 -   Which kind of pictures (given fixed categories for the pictures) should
     a host upload to be trust worthy / be able to demand a high price / increase
     the amount of requests
+    
