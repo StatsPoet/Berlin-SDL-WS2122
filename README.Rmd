@@ -97,15 +97,9 @@ In addition, many city or state legislation or ordinances that address residenti
 -   Modelle sollen so geschrieben werden dass es sie auf die neue Stadt angepasst werden kann
 
 
-## ToDo for the 20/21.11
-
--   watch lecture videos (Seb)
--   look through data analysis example on on jupiter notebook
-    and think of possible research questions (Seb/Tobi)
--   contact Profs for an personal Skype (Seb)
--   Look for Github workflow guide (Tobi)
--   Download Gitkraken (Seb/Tobi)
--   Agree on some questions for the talk with the prof as given below
+## Anmeldedaten für DeepL Videos bei Manning (DeepLearnng with R in motion):
+-   tobirinnert@gmail.com
+-   DeepLearningWS2021
 
 ## Dataset of labeled handwritten digits
 -   http://yann.lecun.com/exdb/mnist/
@@ -121,18 +115,6 @@ In addition, many city or state legislation or ordinances that address residenti
 -   hand in by 06/03/2022, 23.59
 -   Revised term paper: hand in by 31/03/2022
 -   Publication of collective volume provisionally by end of 2022
-
-
-Questions for the talk with prof:
-
--   Should we implement the neural nets from scratch or 
-    can we use every package we want?
--   How are the different models going to be compared, if we have different 
-    research questions?
--   How many variables should we use ?
--   What is meant by "interpretable" exactly?
--   Do we have to cite papers?
-
 
 Possible research questions: 
 -   Will a certain host list a new flat in the next weeks/month/years?
