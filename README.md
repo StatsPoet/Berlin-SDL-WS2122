@@ -89,18 +89,17 @@ make reference to allowed use, including:
 -   Modelle sollen so geschrieben werden dass es sie auf die neue Stadt
     angepasst werden kann
 
-## ToDo for the 20/21.11
+## Anmeldedaten für DeepL Videos bei Manning (DeepLearnng with R in motion):
 
--   watch lecture videos (Seb)
--   look through data analysis example on on jupiter notebook and think
-    of possible research questions (Seb/Tobi)
--   contact Profs for an personal Skype (Seb)
--   Look for Github workflow guide (Tobi)
--   Download Gitkraken (Seb/Tobi)
--   Agree on some questions for the talk with the prof as given below
+-   <tobirinnert@gmail.com>
+-   DeepLearningWS2021
 
-[DeepL 3Blue1Brown
-Link](https://github.com/mnielsen/neural-networks-and-deep-learning)
+## Dataset of labeled handwritten digits
+
+-   <http://yann.lecun.com/exdb/mnist/>
+-   <https://rpubs.com/Argaadya/nn-mnist> (Code)
+-   <https://www.kaggle.com/c/digit-recognizer/overview/description>
+-   <https://www.kaggle.com/russwill/build-your-own-neural-network-in-r>
 
 ## Important Dates
 
@@ -110,13 +109,6 @@ Link](https://github.com/mnielsen/neural-networks-and-deep-learning)
 -   hand in by 06/03/2022, 23.59
 -   Revised term paper: hand in by 31/03/2022
 -   Publication of collective volume provisionally by end of 2022
-
-Questions for the talk with prof:
-
--   can we use packages?
--   how are the different models going to be compared, if we have
-    different research questions?
--   Which form should a research questions have?
 
 Possible research questions: - Will a certain host list a new flat in
 the next weeks/month/years? - Which kind of pictures (given fixed
