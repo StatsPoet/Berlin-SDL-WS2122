@@ -94,6 +94,10 @@ make reference to allowed use, including:
 -   <tobirinnert@gmail.com>
 -   DeepLearningWS2021
 
+## Scraper für Airbnb
+
+-   in dem py file: airbnb_pic_scraper
+
 ## Dataset of labeled handwritten digits
 
 -   <http://yann.lecun.com/exdb/mnist/>
