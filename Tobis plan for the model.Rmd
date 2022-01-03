@@ -1,0 +1,25 @@
+---
+title: "Tobis plan for the model"
+author: "Tobias_R"
+date: "3 Januar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Grobe Übersicht: 
+Das Modell hat zwei Hauptbereiche: Das Neuronale Netz und die Regression. Das neuronale Netz erkennt Gegenstände in der Wohnung. Etwa ein doppel Bett oder einen Schrank etc. Diese Idee habe im QnA vorgestellt. Mit dem Neuronalen Netz erhalten wir also eine Liste, die uns für jede Wohnung die erkannten Gegenstände gibt. Diese können wir dann als erklärende Variable für die Regression nehmen. 
+
+Das CNN:
+Das Neuronale Netz wird ähnlich aufgebaut wie das manning Netz. Die Bilder von RbnB werden mit einem Convolutional Net analysiert. Dieses CNNs can pretrained sein. Solche Modelle sind im Internet frei verfügbar. Welches sich am besten eignet muss noch bestimmt werden. 
+(Z.B Inception https://www.analyticsvidhya.com/blog/2020/08/top-4-pre-trained-models-for-image-classification-with-python-code/) 
+Auf das CNN folgt unser eigenes DeepNet. Das Design könnne wir zunächst auch aus den Manning Videos übernehmen.
+Wir definieren wieviele Gegenstände wir erkennen möchten. Als Beispiel: "Doppelbett" / "Einzelbett", "kleiner Schrank" / "großer Schrank", "kleines Fenster" / "großes Fenster". Nehmen wir mal an wir haben 10 Gegenstände die wir erkennen möchten. Das heist das DeepNet am Ende unseres CNNs wird 10 Endpunkte haben. 
+
+CNN und Regression zusammen:
+Bei der Integrierung in die Regression muss sehr auf die correlation mit anderen Variablen geachtet werden. Einige Gegenstände die in den Wohnungen sind, sind ja schon in den Daten aufgeführt. Wir können allerdings die Gegenstände die wir erkennen wollen selbst wählen. Demnach würde ich eher Gegenstände wählen die noch nicht aufgelistet sind. Es kann aber auch Sinn ergeben, bereits genannte Gegenstände zu erkennen. Denn wichtig ist, dass diese gegenstände in den Bildern zu erkennen ist. Unsere Variable aus dem CNN ist also nicht "Diese Gegenstände gibt es" sondern "diese Gegenstände sind auf den Bildern". 
+
+Boosting:
+Ist die base Regression mit der erklärenden Variable aus dem CNN fertig, habe ich die Hoffnung dass wir auch noch Boosting verwenden können. Da ich mich hier aber nicht auskenne habe ich mich erstmal auf den grundsätlichen AUfbau unseres Modells konzentriert. ich denke wenn wir Bossting anwenden können, wäre das herausragend. 
