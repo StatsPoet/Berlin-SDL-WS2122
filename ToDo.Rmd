@@ -1,0 +1,43 @@
+---
+title: "ToDo"
+author: "Tobias_R"
+date: "15 Januar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Liste mit detected objekten erstellen und auf r-projekt
+
+Helligkeit und warm / kalt erkennen.
+- möglichk mit pillow package in python
+- Kelvin si colour
+- Lumen unit
+
+
+Bildqualität mit cnn
+
+Email bilder scraping mit matse klären
+- drei Gruppen haben es definitiv geschafft alle Bilder zu scrapen. 
+- wenn dann per privaten email würde ich sagen
+
+Picture scene analsis
+- das gleiche skript nutzt matse. 
+- muss lokal aufgebaut werden dann sollte es laut matse klappen
+
+
+NLP
+- Word stemming von isi projekt auf rviews anwenden
+- Vielleicht intervalle bilden
+- Seb macht zuerst noch weiter und deligiert dann
+
+	
+
+Citavi
+- Für picture detection websiten direkt auf citavi
+- Citavi grupieren und sortieren
+-	Reference website und save als pdf oder über local file also pdfs runterladen
+- Alle angeschauten modelle zu detection und segmentation auf citavi in die gliederung die seb eröffnet
+- "Wissen" fenster auf citavi für cnn weitermachen
