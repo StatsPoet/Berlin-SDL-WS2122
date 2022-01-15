@@ -75,13 +75,12 @@ knitr::opts_chunk$set(echo = TRUE,
 ### Report (15 Seiten) (Sebi/Tobi)
 
 #### Write (Sebi/Tobi)
-- .Rmd file with report structure of the project based on rene's 7 steps. 
-This is going to be the final version. 
-- .bib file export path.
+- ~~.Rmd file with report structure of the project based on rene's 7 steps. ~~
+- ~~.bib file export path.~~
 
 
 #### Literature (Sebi/Tobi)
-Citavi
+
 - Für picture detection websiten direkt auf citavi
 - Citavi grupieren und sortieren
 -	Reference website und save als pdf oder über local file also pdfs runterladen

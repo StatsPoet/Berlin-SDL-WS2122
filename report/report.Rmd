@@ -1,0 +1,72 @@
+---
+title: "Berlin AirBnB DL nice title "
+bibliography:
+- references.bib
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output:
+  html_document:
+    df_print: paged
+    toc: no
+    toc_depth: '2'
+  pdf_document:
+    includes:
+      before_body: frontpage.tex
+      in_header: preamble.tex
+    keep_tex: yes
+    template: null
+    toc: no
+    toc_depth: 2
+  word_document:
+    toc: no
+    toc_depth: '2'
+geometry: left=4cm, right=3cm, top=2.5cm, bottom=2.5cm
+documentclass: report
+biblio-style: apalike
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+``` 
+
+
+# Abstract
+This paper rocks because we rock. 
+
+
+Keywords: AI, such smart terms,  many gradient descent, wow location and scale. 
+
+
+# 1. Introduction/  Define a problem. 
+
+Example cite. Tobi likes Francois @Chollet.2018.
+
+# 2. Choose a measure of success (accuracy? Precision)
+
+# 3. Decide how to evaluate (Cross validation)
+
+# 4. Prepare the data (Formatting/ Feature Engineering)
+
+# 5. Develope a model that performs better tha the baseline
+
+# 6. Scale up and develope a model that overfits.
+
+# 7. Regularize the model and tune hyperparameters. 
+
+
+# 8. References
+
+<div id="refs"></div>
+
+# 9. Appendix
+
+Example: 
+
+The conditional porbability density function of a gaussian response is
+
+\begin{equation}
+ \begin{gathered}
+  f\left( y_i|\bm{x_i} \right) = \frac{1}{\sigma_i \sqrt{2\pi}} \exp \Bigg\{ { -\frac{1}{2} \left(\frac{y_i - \mu_i}{\sigma_i} \right)^2} \Bigg\} \\
+ \end{gathered}
+\end{equation}
+
+T

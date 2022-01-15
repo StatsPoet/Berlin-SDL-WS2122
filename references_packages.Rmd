@@ -1,0 +1,19 @@
+---
+title: "Cite Packages"
+author: "asp20boost"
+date: "15 Januar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+Tobi: Bitte listet sowie angezeigt alle packages, die du für das modelbau, bilder analyse etc genutzt hast. 
+```{r pack tex, include=FALSE}
+# automatically create a bib database for R packages
+ knitr::write_bib(c(
+ .packages(), 'knitr', 'rmarkdown', 'gamboostLSS','mboost', 'tidyverse', 'microbenchmark'
+  ), 'packages.bib')
+```

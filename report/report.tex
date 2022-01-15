@@ -1,0 +1,172 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{report}
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\hypersetup{
+  pdftitle={Berlin AirBnB DL nice title},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+\urlstyle{same} % disable monospaced font for URLs
+\usepackage[left=4cm, right=3cm, top=2.5cm, bottom=2.5cm]{geometry}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{booktabs}
+\usepackage[english]{babel}
+\usepackage{amsmath, bm}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1 \everypar{\setlength{\hangindent}{\cslhangindent}}\ignorespaces\fi
+  % set entry spacing
+  \ifnum #2 > 0
+  \setlength{\parskip}{#2\baselineskip}
+  \fi
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\title{Berlin AirBnB DL nice title}
+\author{}
+\date{\vspace{-2.5em}15 Januar 2022}
+
+\begin{document}
+\maketitle
+
+\begin{titlepage}
+\vspace*{3.5cm}
+\centering
+{\LARGE DL}\\[2\baselineskip]
+\selectlanguage{english}
+{\LARGE  Term Paper  \\
+ Submitted in partial fulfillment of the requirements for the  master's seminar\\
+\textquotedblleft Advanced Statistical Programming \textquotedblright\ \\
+of the \\
+Faculty the Economic Sciences \\
+of the \\
+Georg August University of Göttingen\\
+2022 \par}
+\vspace*{\fill}
+\begin{flushleft}
+Juan Sebastián Aristizábal Ortiz\\
+Tobias Rinnert
+
+Date of submission: 06.03.2022\\
+\vspace{10mm}
+Advisor: Prof. Dr. Thomas Kneib\\
+Center for Statistics\\
+\end{flushleft}
+\thispagestyle{empty}
+\end{titlepage}
+
+\hypertarget{abstract}{%
+\chapter{Abstract}\label{abstract}}
+
+This paper rocks because we rock.
+
+Keywords: AI, such smart terms, many gradient descent, wow location and
+scale.
+
+\hypertarget{introduction-define-a-problem.}{%
+\chapter{1. Introduction/ Define a
+problem.}\label{introduction-define-a-problem.}}
+
+Example cite. Tobi likes Francois Chollet and Allaire (2018).
+
+\hypertarget{choose-a-measure-of-success-accuracy-precision}{%
+\chapter{2. Choose a measure of success (accuracy?
+Precision)}\label{choose-a-measure-of-success-accuracy-precision}}
+
+\hypertarget{decide-how-to-evaluate-cross-validation}{%
+\chapter{3. Decide how to evaluate (Cross
+validation)}\label{decide-how-to-evaluate-cross-validation}}
+
+\hypertarget{prepare-the-data-formatting-feature-engineering}{%
+\chapter{4. Prepare the data (Formatting/ Feature
+Engineering)}\label{prepare-the-data-formatting-feature-engineering}}
+
+\hypertarget{develope-a-model-that-performs-better-tha-the-baseline}{%
+\chapter{5. Develope a model that performs better tha the
+baseline}\label{develope-a-model-that-performs-better-tha-the-baseline}}
+
+\hypertarget{scale-up-and-develope-a-model-that-overfits.}{%
+\chapter{6. Scale up and develope a model that
+overfits.}\label{scale-up-and-develope-a-model-that-overfits.}}
+
+\hypertarget{regularize-the-model-and-tune-hyperparameters.}{%
+\chapter{7. Regularize the model and tune
+hyperparameters.}\label{regularize-the-model-and-tune-hyperparameters.}}
+
+\hypertarget{references}{%
+\chapter{8. References}\label{references}}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-Chollet.2018}{}}%
+Chollet, François, and J. J. Allaire. 2018. \emph{Deep Learning with r}.
+Shelter Island: {Manning Publications}.
+
+\end{CSLReferences}
+
+\hypertarget{appendix}{%
+\chapter{9. Appendix}\label{appendix}}
+
+Example:
+
+The conditional porbability density function of a gaussian response is
+
+\begin{equation}
+ \begin{gathered}
+  f\left( y_i|\bm{x_i} \right) = \frac{1}{\sigma_i \sqrt{2\pi}} \exp \Bigg\{ { -\frac{1}{2} \left(\frac{y_i - \mu_i}{\sigma_i} \right)^2} \Bigg\} \\
+ \end{gathered}
+\end{equation}
+
+T
+
+\end{document}

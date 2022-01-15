@@ -76,11 +76,13 @@ Deep and Statistical Learning WS 21-22
 
 #### Literature (Sebi/Tobi)
 
-Citavi - Für picture detection websiten direkt auf citavi - Citavi
-grupieren und sortieren - Reference website und save als pdf oder über
-local file also pdfs runterladen - Alle angeschauten modelle zu
-detection und segmentation auf citavi in die gliederung die seb eröffnet
-- “Wissen” fenster auf citavi für cnn weitermachen
+-   Für picture detection websiten direkt auf citavi
+-   Citavi grupieren und sortieren
+-   Reference website und save als pdf oder über local file also pdfs
+    runterladen
+-   Alle angeschauten modelle zu detection und segmentation auf citavi
+    in die gliederung die seb eröffnet
+-   “Wissen” fenster auf citavi für cnn weitermachen
 
 ### Best practices
 
