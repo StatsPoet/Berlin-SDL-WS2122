@@ -1,0 +1,17 @@
+---
+title: "Kalender"
+author: "Tobias_R"
+date: "15 Januar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Calender Tobi: 
+- 20.2  	Deepl präsi
+- 25.02	 Spatial
+- 06.03 	DeepL paper first
+- 14.03 - 18.03	Latex
+- 31.3 	Deepl paper revised and Discrete choice

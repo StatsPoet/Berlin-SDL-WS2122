@@ -1,0 +1,59 @@
+---
+title: "Write"
+author: "Juan Sebastian Aristizabal Ortiz"
+date: "1 12 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+-Sentiment analysis - Text nicht nehmen müssen
+
+- Model - Strukturiert
+    - Bilder integriert
+
+- Alles miteinbeziehen in 1 NN = Model schlecht. 
+
+1. Werte Strukturierter. 
+2. Objekt detektieren. 
+- PCR
+
+
+Bilderscrapping
+
+> Colab   
+
+Image Regression
+Mittel CNN
+
+4. Fit testing 
+
+10. Komplizität = Overfitting. 
+
+Bewertungshierarchie: 
+    1. y = Preis i.e. guter Preisvorhersage
+    2. Wie wir das machen ist es egal, aber natürlich NN um in Papier reinzukommen. 
+    3. Erklärbarkeit. 
+    
+    
+Flexibilität = Numpy?
+Keras
+
+Multilevel Set
+
+Keras. 
+
+
+## Wie
+
+Mixed Data Multiimput CNN
+- Nicht gut erklärbar. 
+
+
+Bossting 
+GBT2
+
+
+
