@@ -3,59 +3,144 @@ Deep and Statistical Learning WS 21-22
 
 # Analysis of Berlins Airbnb Data using statistical and deep learning methods.
 
+> Am besten dieser File in HTML angucken (wenn nicht in GitHub). To edit
+> –&gt; Rstudio.
+
+## TO DO
+
+## Orga
+
+-   Define “our” deadlines
+-   a concrete scope of the project (to avoid working in vain).
+
+### Data preprocesing (Sebi/Tobi)
+
+-   upload cleaned datasets
+
+#### Turn to metric
+
+-   seasson (summer/winter variable).
+-   Tobi runs script to create custum seasson variable.
+-   
+
+#### Bild (Tobi)
+
+-   Liste mit detected objekten erstellen und auf r-projekt
+
+##### Farbe/helligkeit
+
+-   Möglichkeit mit pillow package in python
+-   Kelvin si colour
+-   Lumen unit
+
+##### Bildqualität mit cnn
+
+-   Email bilder scraping mit matse klären
+-   drei Gruppen haben es definitiv geschafft alle Bilder zu scrapen.
+-   wenn dann per privaten email würde ich sagen
+
+Picture scene analsis - das gleiche skript nutzt matse. - muss lokal
+aufgebaut werden dann sollte es laut matse klappen
+
+### Text i.e reviews
+
+NLP - Word stemming von isi projekt auf rviews anwenden - Vielleicht
+intervalle bilden - Seb macht zuerst noch weiter und deligiert dann
+
+### Analisis
+
+#### Regression (Sebi)
+
+-   Basic regression with available variables.
+-   Update correlation plot for clarity.
+
+#### Regularization/Boosting (Sebi/Tobi)
+
+-   6.  Scale up and develope a model that overfits.
+
+    -   ?
+
+-   7.  Regularize a model and tune hyperparemeters
+
+    -   ? \#\#\# Report (15 Seiten) (Sebi/Tobi)
+
+#### Literature (Sebi/Tobi)
+
+Citavi - Für picture detection websiten direkt auf citavi - Citavi
+grupieren und sortieren - Reference website und save als pdf oder über
+local file also pdfs runterladen - Alle angeschauten modelle zu
+detection und segmentation auf citavi in die gliederung die seb eröffnet
+- “Wissen” fenster auf citavi für cnn weitermachen
+
+#### Write (Sebi/Tobi)
+
+-   .Rmd file with report structure of the project based on rene’s 7
+    steps. This is going to be the final version.
+-   .bib file export path.
+
+### Best practices
+
+-   Für Tobi: Branching in GIT
+-   Citavi: Add references and inmediatly document the corresponding PDF
+
+## Calendar
+
+### Global
+
+-   17.01.21: QA
+-   20-21.02.21 09:00-12:00: Group presentation
+-   06.03.22 23:59: Hand in Term paper of 15 pages and
+    Challenge-submittal
+-   31.03.22: Hand in Revised term paper
+
+### Tobi
+
+-   20.02.21 Deepl präsi
+-   25.02.21 Spatial
+-   06.03.21 DeepL paper first
+-   14-18.03.21 Latex (What is this? @Sebi.15.01)
+-   31.03.21 Deepl paper revised and Discrete choice
+
+### Sebi
+
+## Anmeldedaten für DeepL Videos bei Manning (DeepLearnng with R in motion):
+
+-   <tobirinnert@gmail.com>
+-   DeepLearningWS2021
+
 ## Data
 
--   [Visual representation](http://insideairbnb.com/berlin)
--   [Get the data](http://insideairbnb.com/get-the-data.html)
+siehe .Rmd in Data folder.
 
-Data last downloaded 10.11.21
+## Ergebnisse QA 17.01.21
 
-## Possible analisis:
+## Ergebisse Anton Treffen: Stichworter ohne Zuordnung (Vielleicht sagen die dir was Tobi)
 
-### Fundamentals:
+-   Sentiment analysis - Text nicht nehmen müssen
 
-[Taken from the about page of Insider
-Airbnb](http://insideairbnb.com/about.html)
+-   Alles miteinbeziehen in 1 NN = Model schlecht.
 
-By analyzing publicly available information about a city’s Airbnb’s
-listings, Inside Airbnb provides filters and key metrics so you can see
-how Airbnb is being used to compete with the residential housing market.
+    1.  Werte Strukturierter.
+    2.  Objekt detektieren.
 
-With Inside Airbnb, you can ask fundamental questions about Airbnb in
-any neighbourhood, or across the city as a whole. Questions such as:
+-   PCR
 
--   “How many listings are in my neighbourhood and where are they?”
--   “How many houses and apartments are being rented out frequently to
-    tourists and not to long-term residents?”
--   “How much are hosts making from renting to tourists (compare that to
-    long-term rentals)?”
--   “Which hosts are running a business with multiple listings and where
-    they?”
+-   Bilderscrapping
 
-The tools are presented simply, and can also be used to answer more
-complicated questions, such as:
+-   Multilevel Set
 
--   “Show me all the highly available listings in Bedford-Stuyvesant in
-    Brooklyn, New York City, which are for the ‘entire home or
-    apartment’ that have a review in the last 6 months AND booked
-    frequently AND where the host has other listings.”
+-   Image Regression
 
-These questions (and the answers) get to the core of the debate for many
-cities around the world, with Airbnb claiming that their hosts only
-occasionally rent the homes in which they live.
+-   Mittel CNN
 
-In addition, many city or state legislation or ordinances that address
-residential housing, short term or vacation rentals, and zoning usually
-make reference to allowed use, including:
+    4.  Fit testing
+    5.  Komplizität = Overfitting.
 
--   how many nights a dwelling is rented per year
--   minimum nights stay
--   whether the host is present
--   how many rooms are being rented in a building
--   the number of occupants allowed in a rental whether the listing is
-    licensed
+> Mixed Data Multiimput CNN
 
-### Paper Inspiration
+-   Nicht gut erklärbar.
+-   B0ossting
+-   GBT2
 
 ## Notizen für die QnA vom 15.11
 
@@ -88,33 +173,3 @@ make reference to allowed use, including:
 
 -   Modelle sollen so geschrieben werden dass es sie auf die neue Stadt
     angepasst werden kann
-
-## Anmeldedaten für DeepL Videos bei Manning (DeepLearnng with R in motion):
-
--   <tobirinnert@gmail.com>
--   DeepLearningWS2021
-
-## Scraper für Airbnb
-
--   in dem py file: airbnb_pic_scraper
-
-## Dataset of labeled handwritten digits
-
--   <http://yann.lecun.com/exdb/mnist/>
--   <https://rpubs.com/Argaadya/nn-mnist> (Code)
--   <https://www.kaggle.com/c/digit-recognizer/overview/description>
--   <https://www.kaggle.com/russwill/build-your-own-neural-network-in-r>
-
-## Important Dates
-
--   QnA session: 13/12 17/01
--   Group presentation 20/02 – 21/02, 09.00–12.00
--   Term paper of 15 pages and Challenge-submittal:
--   hand in by 06/03/2022, 23.59
--   Revised term paper: hand in by 31/03/2022
--   Publication of collective volume provisionally by end of 2022
-
-Possible research questions: - Will a certain host list a new flat in
-the next weeks/month/years? - Which kind of pictures (given fixed
-categories for the pictures) should a host upload to be trust worthy /
-be able to demand a high price / increase the amount of requests
