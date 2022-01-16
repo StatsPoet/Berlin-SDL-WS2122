@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 - [Visual representation](http://insideairbnb.com/berlin)
 - [Get the data](http://insideairbnb.com/get-the-data.html)
 
-Data last downloaded 10.11.21
+Data last downloaded 16.01.22
 
 ## Scraper für Airbnb
 -   in dem py file: airbnb_pic_scraper
