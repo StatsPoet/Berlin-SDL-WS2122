@@ -1,0 +1,26 @@
+---
+title: "Tobis Thoughts/Workflow"
+author: "Tobias_R"
+date: "16 Januar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+15.01
+
+Datei: Inddor_Image_Object_Detection
+
+- versuch ResNet50 mit fertigem Datensatz nochmal zu trainieren, um Hyperparameter anzupassen, und Graphiken für die Hyperparameter Anpassung zu erstellen
+- Problem mit Cuda auf colab
+  - mögliche Lösungen: 
+    - skript lokal laufen lassen
+    - bug in colab lösen
+
+16.01
+
+Datei : Indoor_Image_Object_Detection
+
+- Meine Graphic Karte ist nicht colab fähig. Das netz muss also auf colab trainiert werden

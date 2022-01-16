@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Calendar 
 
 ### Global
--   17.01.21: QA 10:30
+-   17.01.21: QA 10:30 
 -   20-21.02.21 09:00-12:00: Group presentation
 -   06.03.22 23:59: Hand in Term paper of 15 pages and Challenge-submittal
 -   31.03.22: Hand in Revised term paper
