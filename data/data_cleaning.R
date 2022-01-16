@@ -9,6 +9,17 @@ library(magrittr)
 library(anytime)
 library(lubridate)
 
+## To Do:
+# - Consider uniting all datasets in one by variable time i.e. metric, text, time. 
+# - Text seems omnipresent. We need to use it. 
+# - Crossvalidation: training and testing dataset. 
+
+## Ideas for variable coding of chr into num:
+# - Language of name (EN vs DE).
+# - review dates into seasonal interval. 
+
+
+
 # Import Dataset
 grand_listings <- read_csv("data/listings.csv.gz")
 
@@ -105,14 +116,14 @@ data <- data[,names(sort(unlist(lapply(data, class)), decreasing = T))]
 
 ## Separate dataset between facts, text and dates (again)
 
-time <- data[,44:45]
-text <- data[,46:59]
-mvars <- data[, -c(44:59)] # for model_variables
+time <- data[,43:47]
+text <- data[,48:63]
+mvars <- data[, -c(43:63)] # for model_variables
 
 ## Export datasets.
-write.csv2(x=data, file="data/1_mvars.csv")
-write.csv2(x=text, file="data/2_text.csv")
-write.csv2(x=time, file="data/3_time.csv")
+write.csv(x=mvars, file="data/1_mvars.csv")
+write.csv(x=text, file="data/2_text.csv")
+write.csv(x=time, file="data/3_time.csv")
 
 
 # ## Normalization and centralization
