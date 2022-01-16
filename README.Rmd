@@ -39,6 +39,8 @@ knitr::opts_chunk$set(echo = TRUE,
 #### Bild (Tobi)
 
 - Liste mit detected objekten erstellen und auf r-projekt
+- Bild detection and segmentation auf colab
+  - https://colab.research.google.com/drive/1OCOeZJkA1_2hFLSbFUkez5vrRzIu2UpA?usp=sharing
 
 ##### Farbe/helligkeit
 
@@ -57,7 +59,7 @@ knitr::opts_chunk$set(echo = TRUE,
 - muss lokal aufgebaut werden dann sollte es laut matse klappen
 
 ### Text i.e reviews /NLP
-- Word stemming von isi projekt auf rviews anwenden
+- Word stemming von isi projekt (tobi arbeit)  auf rviews anwenden
 - Vielleicht intervalle bilden
 - Seb macht zuerst noch weiter und deligiert dann
 
