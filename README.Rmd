@@ -28,8 +28,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 
 ### Data preprocesing (Sebi/Tobi)
-- upload cleaned datasets
-- Update correlation plot for clarity. 
+ 
 
 #### Listings : Turn to metric
 - seasson (summer/winter variable). 
@@ -52,7 +51,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 - Email bilder scraping mit matse klären
 - drei Gruppen haben es definitiv geschafft alle Bilder zu scrapen. 
-- wenn dann per privaten email würde ich sagen
+
 
 ##### Picture Scene analsis
 - das gleiche skript nutzt matse. 
@@ -66,9 +65,19 @@ knitr::opts_chunk$set(echo = TRUE,
 ### Analisis/Model Construction 
 
 #### Regression (Sebi)
-- Basic regression with available variables. 
+- Run regression without latitutude, longitude 
+- run regression without highly correlated variables. 
 
-#### Regularization/Boosting (Sebi/Tobi)
+## Get a grap for boosting. 
+- Last project? how to include in a model?
+- Mixed Data Multiimput CNN: Nicht gut erklärbar. 
+- GBT2
+- adaboost usage with airbnb data. 
+- metric for comparison with covnets. 
+
+
+
+#### Regularization/ (Sebi/Tobi)
 - 6. Scale up and develope a model that overfits.
     + ?
 - 7. Regularize a model and tune hyperparemeters
