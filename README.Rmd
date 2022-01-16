@@ -77,8 +77,7 @@ knitr::opts_chunk$set(echo = TRUE,
 ### Report (15 Seiten) (Sebi/Tobi)
 
 #### Write (Sebi/Tobi)
-- ~~.Rmd file with report structure of the project based on rene's 7 steps. ~~
-- ~~.bib file export path.~~
+
 
 
 #### Literature (Sebi/Tobi)
