@@ -9,6 +9,8 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+Tagebuch für mich: 
+
 15.01
 
 Datei: Inddor_Image_Object_Detection
@@ -24,3 +26,9 @@ Datei: Inddor_Image_Object_Detection
 Datei : Indoor_Image_Object_Detection
 
 - Meine Graphic Karte ist nicht colab fähig. Das netz muss also auf colab trainiert werden
+- Training läuft. Dafür musste ich allerdings die Batch size reduzieren. 
+  Wir sollten colab auf pro aufwerten um mehr gpu power zu bekommen
+- Ich habe mein drive auf 100 GB upgedatet damit ixh alle herunter geladenen Dateien speichern   kann. 
+  Mein Drive kann ich auch gerne allg. zur verfügung stellen. 
+- ich habe einige websiten Hinzugefügt die wir für unserern detector brauchen und citieren      müssen. 
+
