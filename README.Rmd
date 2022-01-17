@@ -40,6 +40,8 @@ knitr::opts_chunk$set(echo = TRUE,
 - Liste mit detected objekten erstellen und auf r-projekt
 - Bild detection and segmentation auf colab
   - https://colab.research.google.com/drive/1OCOeZJkA1_2hFLSbFUkez5vrRzIu2UpA?usp=sharing
+- Colab upgraden und schauen ob die batch size erhöht werden kann
+- Hyperparameter tuning
 
 ##### Farbe/helligkeit
 
