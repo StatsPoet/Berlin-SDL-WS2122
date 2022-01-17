@@ -37,11 +37,13 @@ knitr::opts_chunk$set(echo = TRUE,
 
 #### Bild (Tobi)
 
-- Liste mit detected objekten erstellen und auf r-projekt
+- Detection mit allen flat_bildern machen und data.frame auf r-projekt
 - Bild detection and segmentation auf colab
   - https://colab.research.google.com/drive/1OCOeZJkA1_2hFLSbFUkez5vrRzIu2UpA?usp=sharing
 - Colab upgraden und schauen ob die batch size erhöht werden kann
 - Hyperparameter tuning
+- add more classes and delete some
+- change the size of pictures scraped to the size of picture the model is trained on
 
 ##### Farbe/helligkeit
 

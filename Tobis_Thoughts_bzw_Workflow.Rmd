@@ -32,3 +32,8 @@ Datei : Indoor_Image_Object_Detection
   Mein Drive kann ich auch gerne allg. zur verfügung stellen. 
 - ich habe einige websiten Hinzugefügt die wir für unserern detector brauchen und citieren      müssen. 
 
+17.01
+- QnA in the morning.
+  - video on one drive https://drive.google.com/file/d/14SYr8pw3CQxajkrNh7AfMxgtflt_G6-q/view?usp=sharing
+- solved merge conflict with gitkraken
+- created data.frame in Indoor Image Object Detection and Tagging.ipynb with columns of 1 and 0's for wheather object was detected
