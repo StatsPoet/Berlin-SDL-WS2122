@@ -40,7 +40,7 @@ knitr::opts_chunk$set(echo = TRUE,
 - Detection mit allen flat_bildern machen und data.frame auf r-projekt
 - Bild detection and segmentation auf colab
   - https://colab.research.google.com/drive/1OCOeZJkA1_2hFLSbFUkez5vrRzIu2UpA?usp=sharing
-- Colab upgraden und schauen ob die batch size erhöht werden kann
+- schauen ob die batch size erhöht werden kann
 - Hyperparameter tuning
 - add more classes and delete some
 - change the size of pictures scraped to the size of picture the model is trained on
@@ -72,20 +72,28 @@ knitr::opts_chunk$set(echo = TRUE,
 - Run regression without latitutude, longitude 
 - run regression without highly correlated variables. 
 
+```{r}
+median("lange der Reviews")
+log("preis") # fuer Lin Reg, not for Random Forests. 
+```
+
+
 ## Get a grap for boosting. 
 - Last project? how to include in a model?
 - Mixed Data Multiimput CNN: Nicht gut erklärbar. 
 - GBT2
 - adaboost usage with airbnb data. 
 - metric for comparison with covnets. 
-
+- XGboost: How to parameter tuning. 
 
 
 #### Regularization/ (Sebi/Tobi)
 - 6. Scale up and develope a model that overfits.
     + ?
 - 7. Regularize a model and tune hyperparemeters
-    + ?
+    + - Consider Feature Selection algorithms. Consider their relevance and needed work.
+    
+
 
 ### Report (15 Seiten) (Sebi/Tobi)
 

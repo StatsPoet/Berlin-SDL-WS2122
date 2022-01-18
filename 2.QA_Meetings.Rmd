@@ -11,6 +11,48 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Markdown## Ergebnisse QA 17.01.21
 
+Erklärbarkeit -> Generalisiertbarkei des Models auf dem neuen Datensatzt nicht zentral. 
+
+Data Preparation zentral
+
+.jpeg Suffix könnte ein Problem für den Scraper sein. 
+
+
+## Model
+
+```{r}
+median("lange der Reviews")
+log("preis") # fuer Lin Reg, not for Random Forests. 
+```
+
+Consider Feature Selection algorithms. Consider their relevance and needed work. 
+
+> Aussage  ueber Appendix verpasst! was war da?
+
+## Data Augmentation:
+do we need to consider this?
+-> skepsis, dass es fuer die Regression hilt. 
+
+
+- Boostrapping. 
+
+> Letzte Frage von Joel Verpasst -> er antwortete mit Ja. 
+
+
+
+
+## Schreiben. 
+
+bedenke, wer die Adressaten sind. 
+nur Darstellung von speziellen Modellen noetig. 
+i.e. xgboost ist kein speziellen Modell
+
+### ZITTIEREN ALLES was es geht. ZITTIEREN IS life!
+
+
+
+
+
 
 ## Ergebisse Anton Treffen: Stichworter ohne Zuordnung (Vielleicht sagen die dir was Tobi)
 - Sentiment analysis - Text nicht nehmen müssen
