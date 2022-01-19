@@ -37,3 +37,14 @@ Datei : Indoor_Image_Object_Detection
   - video on one drive https://drive.google.com/file/d/14SYr8pw3CQxajkrNh7AfMxgtflt_G6-q/view?usp=sharing
 - solved merge conflict with gitkraken
 - created data.frame in Indoor Image Object Detection and Tagging.ipynb with columns of 1 and 0's for wheather object was detected
+
+18.01
+- percieved brghtness script in python erstellt. 
+- alle first_flat bilder (erstes bild von jedem host) runtergeladen und hochgeladen
+  - lief natürlich nicht glatt. Der loop sollte markieren wenn ein bild nicht runtergeladen werden konnte. Das hat nicht vollständig geklappt. Allerdings ist jedes Bild im Namen mit der Nummer der jeweiligen iteration versehen. Also wissen wir wo in der listings datei das bild hinkommt also zu welchem host. Fehlt ein bild wird in der sequence der nummern in den namen eine zahl übersprungen. Um die fehlendne Bilder zu finden musste also die ummer aus dem namen extrahiert werden, und dann festgestellt werden wo nummern fehlen. Grundsätzlich einfach, allerdings sind auf drive, die Bilder nicht sortiert. um ein dataframe zu bekommen dass volständig sortiert ist (nach der bild_nummer) und so auch genau auf ie jeweiligen positionen in der listingsdatei passt, musste einiges sortiert werden. Da python und pandas was soetwas angeht sehr anstrengend ist, hat das sehr lange gedauert. Das gleiche Problem musst eauch mit dem datensatz für die brightness gelöst werden. 
+- Ansatz für colour temperature programmiert. Sollte mit dem package möglich sein, das programm rechnet ewig für nur ein bild, aus gründen die ich nicht verstehe. 
+
+19.01 vormittag
+- branch picture_analysis created
+- dataframe problem ist gelöst. Bilder sind in der richtigen reihenfolge und fehlende bilder sind mit "missing" markiert. Freue mich endlich weg von Python zu sein. 
+- lasse das brightness skript und das detection skript gerade durchlaufen. Während dessen mache ich spatial. Wenn alles klappt sollte ich heute abend zwei data.frames in den neuen branch laden können. 
