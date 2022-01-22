@@ -23,17 +23,13 @@ knitr::opts_chunk$set(echo = TRUE,
 ## TO DO
 
 ## Orga
-- Define "our" deadlines 
 - a concrete scope of the project (to avoid working in vain).  
 
 
 ### Data preprocesing (Sebi/Tobi)
- 
-
 #### Listings : Turn to metric
 - seasson (summer/winter variable). 
 - Tobi runs Werkstudent script to create custum seasson variable. 
-
 
 #### Bild (Tobi)
 
@@ -53,10 +49,6 @@ knitr::opts_chunk$set(echo = TRUE,
 
 ##### Bildqualität mit cnn
 
-- Email bilder scraping mit matse klären
-- drei Gruppen haben es definitiv geschafft alle Bilder zu scrapen. 
-
-
 ##### Picture Scene analsis
 - das gleiche skript nutzt matse. 
 - muss lokal aufgebaut werden dann sollte es laut matse klappen
@@ -67,6 +59,9 @@ knitr::opts_chunk$set(echo = TRUE,
 - Seb macht zuerst noch weiter und deligiert dann
 
 ### Analisis/Model Construction 
+#### Training and Test
+- Partition of data in training and test
+
 
 #### Regression (Sebi)
 - Run regression without latitutude, longitude 
@@ -87,7 +82,7 @@ log("preis") # fuer Lin Reg, not for Random Forests.
 - XGboost: How to parameter tuning. 
 
 
-#### Regularization/ (Sebi/Tobi)
+#### RegularizationVariable importance.  (Sebi/Tobi)
 - 6. Scale up and develope a model that overfits.
     + ?
 - 7. Regularize a model and tune hyperparemeters
