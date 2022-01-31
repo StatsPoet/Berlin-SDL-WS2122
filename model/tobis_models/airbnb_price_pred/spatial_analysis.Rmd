@@ -1,0 +1,107 @@
+---
+title: "spatial_analysis"
+author: "Tobias_R"
+date: "29 Januar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+X1_mvars <- read_csv("data/1_mvars.csv")
+#View(X1_mvars)
+```
+
+```{r}
+X1_mvars <- X1_mvars[c(1:100),] #create sample to test more quickly
+```
+
+
+```{r}
+dataset_mod <- X1_mvars[5:length(X1_mvars)]
+dataset_mod <- subset(x = dataset_mod, select = c(longitude, latitude, price))
+#View(dataset_mod)
+```
+
+```{r}
+library(sf)
+library("sp") #needed for coordinate transformation
+library("ggplot2")
+library("OpenStreetMap")
+library("raster") #for borders
+library("geoR")
+
+# Convert data frame to sf object
+spatial_airbnb_sf <- st_as_sf(x = dataset_mod, 
+                        coords = c("longitude", "latitude"),
+                        crs = "+proj=utm +zone=32 ellps=WGS84 +units=km") #could be changed to meter
+
+# convert to sp object if needed
+spatial_airbnb_sp <- as(spatial_airbnb_sf, "Spatial")
+```
+
+
+```{r}
+
+plot_loc <- data.frame(spatial_airbnb_sp) 
+colnames(plot_loc)
+colnames(plot_loc)[2] <- "Easting"
+colnames(plot_loc)[3] <- "Northing"
+
+
+# part iii)
+ggplot(data = plot_loc, mapping = aes(x = Easting,
+                                  y = Northing)) + 
+  geom_point(size = 2) +
+  labs(title = "Location airbnbs in Berlin", 
+       x = "Easting", # Always label your axes.
+       y = "Northing") 
+
+# and in degrees..
+```
+
+```{r}
+dataset_mod["price"] <- log(dataset_mod["price"]) 
+
+berlin_geodata_full <- as.geodata(dataset_mod, 1:2, 3)
+# args for geodata:   object which is a table here. 
+#                     the columns in the table where the spatial oordinates are
+#                     the column where the data is
+
+
+
+plot(berlin_geodata_full)
+```
+
+```{r}
+v <- variog(berlin_geodata_full, max.dist = 1)
+library("ggplot2")
+
+plot(v)
+```
+
+```{r}
+cov_est1 <- likfit(
+  geodata = berlin_geodata_full,
+  cov.model = "exponential",
+  ini.cov.pars = c(1, 1),
+  nugget = 0,
+  fix.nugget = FALSE,
+  messages = TRUE
+)
+
+#likfit function to fit spatial model with ordianry kriging
+# cov.model: in this class we always assume a exponential cov.model
+# ini.cov.pars is the starting value
+# nugget is the starting value for the nugget
+# fix.nugget is wheather to fix the non-spatial error term. 
+# default is the ML so no need to specify the schätzer here
+summary(cov_est1)
+
+#Two or more pairs of data at coincident (or very close) locations. 
+#This may cause crashes in some matrices operations.
+```
+
