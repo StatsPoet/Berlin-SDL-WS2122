@@ -12,18 +12,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-load("~/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
+load("data/image_an_mvars_df.Rda")
 ```
 
 ```{r}
 image_an_mvars_df <- image_an_mvars_df[,3:length(image_an_mvars_df)]
 ```
-
-
-```{r}
-View(image_an_mvars_df[0:10,])
-```
-
 
 ## leave out longitude and latitude
 ```{r}
@@ -32,14 +26,47 @@ image_an_mvars_df <- subset(x = image_an_mvars_df, select = -c(latitude, longitu
 ```
 
 ```{r}
-View(image_an_mvars_df[1:10,])
+for (i in 1:dim(image_an_mvars_df)[2]){
+  image_an_mvars_df[,i] <-  unlist(image_an_mvars_df[,i])
+}
+```
+
+# check if every column is not a list
+```{r}
+truth_list <- list()
+for (i in 1:dim(image_an_mvars_df)[2]){
+  truth_list[i] <-  is.list(image_an_mvars_df[,i])
+}
+
+sum(unlist(truth_list))
 ```
 
 ```{r}
-test <- data.matrix(image_an_mvars_df)
+truth_num <- list()
+for (i in 1:dim(image_an_mvars_df)[2]){
+  truth_num[i] <-  which(is.numeric(image_an_mvars_df[,i]))
+}
+
+sum(unlist(truth_num)) 
+dim(image_an_mvars_df)[2]
 ```
 
+
+```{r}
+View(image_an_mvars_df)
+```
+
+
 Find out what causes nans to come up
+
+reduce columns
+```{r}
+image_an_mvars_df <- image_an_mvars_df[,1:60]
+```
+
+```{r}
+View(image_an_mvars_df)
+```
 
 
 
@@ -79,22 +106,18 @@ View(test_data[0:10,])
 ```
 
 
-## transform data to lists, so that keras can work with it
+## transform data to matrix, so that keras can work with it
 ```{r}
-train_targets <- data.matrix(train_targets)
-test_targets <- data.matrix(test_targets)
-train_data <- data.matrix(train_data)
-test_data <- data.matrix(test_data)
+train_targets <- unlist(c(train_targets))
+test_targets <- unlist(c(test_targets))
+train_data <- array(train_data)
+test_data <- array(test_data)
 ```
 
 ```{r}
-View(train_data)
+head(train_data)
 ```
 
-
-```{r}
-sum(is.nan(train_data))
-```
 
 
 ```{r}
@@ -112,6 +135,11 @@ std <- apply(train_data, 2, sd) # stdev of each column
 train_data <- scale(train_data, center = mean, scale = std)
 test_data <- scale(test_data, center = mean, scale = std)
 ```
+
+```{r}
+View(train_data[1:10,])
+```
+
 
 ## load in keras etc
 
@@ -149,7 +177,6 @@ Added one additional layer to account for the higher number of variables. Does t
 build_model <- function() {
   network <- keras_model_sequential() %>% 
     layer_dense(units = 64, activation = "relu", input_shape = dim(train_data)[2]) %>% 
-    layer_dense(units = 64, activation = "relu") %>% 
     layer_dense(units = 64, activation = "relu") %>%
     layer_dense(units = 1) 
     
@@ -298,7 +325,7 @@ for (i in 1:k) {
                            partial_train_targets,
                            validation_data = list(val_data, val_targets),
                            epochs = num_epochs, 
-                           batch_size = 100, 
+                           batch_size = 500, 
                            verbose = 0
   )
   mae_history <- history$metrics$val_mae

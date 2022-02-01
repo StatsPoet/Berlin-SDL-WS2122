@@ -29,6 +29,7 @@ det_bright_mean_df <- pd$read_pickle("det_bright_mean_df")
 dataset_mod <- read_csv("1_mvars.csv")
 ```
 
+
 ```{r}
 det_bright_mean_df <- subset(x = det_bright_mean_df, select = -c(pic_paths,detect_obj))
 ```
