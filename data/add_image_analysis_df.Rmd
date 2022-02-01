@@ -24,13 +24,13 @@ det_bright_mean_df <- pd$read_pickle("det_bright_mean_df")
 #pic_id == id
 ```
 
-```{r}
-View(det_bright_mean_df)
-```
-
 
 ```{r}
 dataset_mod <- read_csv("1_mvars.csv")
+```
+
+```{r}
+det_bright_mean_df <- subset(x = det_bright_mean_df, select = -c(pic_paths,detect_obj))
 ```
 
 
@@ -38,6 +38,15 @@ dataset_mod <- read_csv("1_mvars.csv")
 ```{r}
 dataset_mod[(length(dataset_mod)-4):length(dataset_mod)] <- lapply(X = dataset_mod[(length(dataset_mod)-4):length(dataset_mod)], FUN = as.numeric)
 #View(dataset_mod[(length(dataset_mod)-4):length(dataset_mod)])
+```
+
+```{r}
+dataset_mod <- subset(x = dataset_mod, select = -c(host_id))
+```
+
+
+```{r}
+View(det_bright_mean_df)
 ```
 
 ## should we drop minimum_minimum_nights, maximum_minimum_nights, maximum_maximum_nights, minimum_nights_avg_ntm, maximum_nights_avg_ntm as they seem to hold the same infos as other columns?
@@ -48,15 +57,20 @@ View(dataset_mod)
 
 
 ```{r}
-image_an_mvars_df <- merge(X1_mvars, det_bright_mean_df, by.x = "id", by.y = "pic_id")
+image_an_mvars_df <- merge(dataset_mod, det_bright_mean_df, by.x = "id", by.y = "pic_id")
 ```
 
 ```{r}
-View(image_an_mvars_df)
+View(image_an_mvars_df[0:10,])
 ```
 
 ```{r}
 save(image_an_mvars_df ,file="image_an_mvars_df.Rda")
 ```
+
+```{r}
+sum(is.na(image_an_mvars_df))
+```
+
 
 

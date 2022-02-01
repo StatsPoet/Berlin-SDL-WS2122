@@ -12,39 +12,53 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-library(readr)
-X1_mvars <- read_csv("data/1_mvars.csv")
-#View(X1_mvars)
+load("~/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
 ```
+
+```{r}
+image_an_mvars_df <- image_an_mvars_df[,3:length(image_an_mvars_df)]
+```
+
+
+```{r}
+View(image_an_mvars_df[0:10,])
+```
+
+
 ## leave out longitude and latitude
 ```{r}
-dataset_mod <- X1_mvars[5:length(X1_mvars)]
-dataset_mod <- subset(x = dataset_mod, select = -c(latitude, longitude))
+image_an_mvars_df <- subset(x = image_an_mvars_df, select = -c(latitude, longitude))
 #View(dataset_mod)
 ```
 
-## transform logical values to binary
 ```{r}
-dataset_mod[(length(dataset_mod)-4):length(dataset_mod)] <- lapply(X = dataset_mod[(length(dataset_mod)-4):length(dataset_mod)], FUN = as.numeric)
-#View(dataset_mod[(length(dataset_mod)-4):length(dataset_mod)])
+View(image_an_mvars_df[1:10,])
 ```
+
+```{r}
+test <- data.matrix(image_an_mvars_df)
+```
+
+Find out what causes nans to come up
+
+
 
 ## split dataset into training and test set.
 Because k-fold cross-validation is used, there is no need for a validation set
 ```{r}
 ## 75% of the sample size
-smp_size <- floor(0.75 * nrow(dataset_mod))
+smp_size <- floor(0.75 * nrow(image_an_mvars_df))
 
 ## set the seed to make your partition reproducible
 set.seed(123)
-train_ind <- sample(seq_len(nrow(dataset_mod)), size = smp_size)
+train_ind <- sample(seq_len(nrow(image_an_mvars_df)), size = smp_size)
 
-train_data <- dataset_mod[train_ind, ]
-test_data <- dataset_mod[-train_ind, ]
+train_data <- image_an_mvars_df[train_ind, ]
+test_data <- image_an_mvars_df[-train_ind, ]
 ```
 
 ```{r}
-View(test_data)
+View(test_data[0:10,])
 ```
 
 
@@ -61,25 +75,25 @@ test_data <- subset(x = test_data, select = -c(price))
 ```
 
 ```{r}
-View(train_data)
+View(test_data[0:10,])
 ```
 
 
 ## transform data to lists, so that keras can work with it
 ```{r}
-train_targets <- unlist(c(train_targets))
-test_targets <- unlist(c(test_targets))
-train_data <- array(train_data)
-test_data <- array(test_data)
+train_targets <- data.matrix(train_targets)
+test_targets <- data.matrix(test_targets)
+train_data <- data.matrix(train_data)
+test_data <- data.matrix(test_data)
 ```
 
 ```{r}
-head(train_data)
+View(train_data)
 ```
 
 
 ```{r}
-#unlist(c(test_targets))
+sum(is.nan(train_data))
 ```
 
 
@@ -163,6 +177,47 @@ indices <- sample(1:nrow(train_data)) # randomize the training set before splitt
 folds <- cut(indices, breaks = k, labels = FALSE) # divide the ordered indices into k intervals, labelled 1:k.
 ```
 
+#test loop there are nans in the datasets ... find out where they come from
+
+```{r}
+num_epochs <- 100
+all_scores <- c() # An empty vector to store the results from evaluation
+
+i = 1
+cat("processing fold #", i, "\n")
+# Prepare the validation data: data from partition # k
+val_indices <- which(folds == i, arr.ind = TRUE) 
+
+# validation set: the ith partition
+val_data <- train_data[val_indices,]
+val_targets <- train_targets[val_indices]
+
+# Training set: all other partitions
+partial_train_data <- train_data[-val_indices,]
+partial_train_targets <- train_targets[-val_indices]
+
+# Call our model function (see above)
+network <- build_model()
+
+# summary(model)
+# Train the model (in silent mode, verbose=0)
+network %>% fit(partial_train_data,
+                partial_train_targets,
+                epochs = num_epochs,
+                batch_size = 100,
+                verbose = 0)
+              
+# Evaluate the model on the validation data
+results <- network %>% evaluate(val_data, val_targets, verbose = 0)
+all_scores <- c(all_scores, results[2])
+```
+
+```{r}
+View(partial_train_data)
+```
+
+
+
 
 ## test if everything works by running cross val with low num_epoch and high batch size
 
@@ -204,7 +259,7 @@ for (i in 1:k) {
 We get 4 mae values
 
 ```{r allscores}
-all_scores
+results
 ```
 
 ### Training with more computational time. Adjust num_epoch and batch size
