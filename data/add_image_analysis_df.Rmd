@@ -1,0 +1,27 @@
+---
+title: "add_image_df"
+author: "Tobias_R"
+date: "1 Februar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load image_df in:
+
+```{r}
+library(reticulate)
+pd <- import("pandas")
+det_bright_mean_df <- pd$read_pickle("data\\det_bright_mean_df")
+```
+
+```{r}
+View(det_bright_mean_df)
+```
+
+```{r}
+
+```
+
