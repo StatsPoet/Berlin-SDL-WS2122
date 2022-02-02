@@ -85,7 +85,7 @@ library(keras)
 
 
 Tried to install mxnet but an error occurs. 
-Also tried working with neuralnet, however the process takes too long. TO get an approx. for the params, mlpKerasDropout should do
+TO get an approx. for the params, mlpKerasDropout should do
 ```{r}
 
 train_df <- as.data.frame(train_data)
@@ -120,7 +120,7 @@ fit_control <- trainControl(method = "adaptive_cv",
                             search = "random")
 
 model <- train(train_df, train_targets, 
-               method = ("mlpKerasDropout"), 
+               method = ("neuralnet"), 
                trControl = fit_control,
                preProc = c("center", "scale"),
                verbose = TRUE,

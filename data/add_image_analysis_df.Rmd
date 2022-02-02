@@ -99,14 +99,25 @@ sum(unlist(truth_num)) == dim(image_an_mvars_df)[2]
 ```
 
 ```{r}
-View(image_an_mvars_df[1:10,])
+image_an_mvars_df_mean_only  <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "Bathroom_cabinet_pic_0"):which(colnames(image_an_mvars_df) == "Washing_machine_pic_10"))]
+```
+
+```{r}
+image_an_mvars_df_mean_only  <- image_an_mvars_df_mean_only[,-c(which(colnames(image_an_mvars_df_mean_only) == "obj_sum"))]
+```
+
+
+```{r}
+View(image_an_mvars_df_mean_only[1:10,])
 ```
 
 ```{r}
 save(image_an_mvars_df ,file="image_an_mvars_df.Rda")
 ```
 
-
+```{r}
+save(image_an_mvars_df ,file="image_an_mvars_df_mean_only.Rda")
+```
 
 
 
