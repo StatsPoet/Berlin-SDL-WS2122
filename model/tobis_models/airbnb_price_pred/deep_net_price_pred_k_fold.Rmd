@@ -20,8 +20,8 @@ load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/
 Because k-fold cross-validation is used, there is no need for a validation set
 
 ```{r}
-## 75% of the sample size
-smp_size <- floor(0.75 * nrow(image_an_mvars_df))
+## 85% of the sample size
+smp_size <- floor(0.85 * nrow(image_an_mvars_df))
 
 ## set the seed to make your partition reproducible
 set.seed(123)
@@ -55,6 +55,7 @@ test_targets <- unlist(c(test_targets))
 train_data <- array(train_data)
 test_data <- array(test_data)
 ```
+
 
 ## standardize data with z-score
 should be the same as sebs
@@ -120,24 +121,36 @@ build_base_model <- function() {
 Added additional layers and units to account for the higher number of variables. 
 For a large input layer the leaky relu is suggested. 
 
+- i use sigmoid only in the last one eventhough caret suggests it in general. But if i use leaky_relu i can present it. Since it could help with a large dataframe, it makes sense here
 ```{r defModel}
 build_model <- function() {
   network <- keras_model_sequential() %>% 
-    layer_dense(units = 600, input_shape = dim(train_data)[2]) %>%
+    layer_dense(units = 400, input_shape = dim(train_data)[2]) %>%
     layer_activation_leaky_relu() %>%
-    layer_dense(units = 300) %>%
+    layer_dropout(0.3) %>%
+    layer_dense(units = 200) %>%
     layer_activation_leaky_relu() %>%
-    layer_dense(units = 150) %>%
+    layer_dropout(0.3) %>%
+    layer_dense(units = 100) %>%
     layer_activation_leaky_relu() %>%
-    layer_dense(units = 1) 
+    layer_dropout(0.3) %>%
+    layer_dense(units = 50) %>%
+    layer_activation_leaky_relu() %>%
+    layer_dropout(0.3) %>%
+    layer_dense(units = 25) %>%
+    layer_activation_leaky_relu() %>%
+    layer_dropout(0.3) %>%
+    layer_dense(units = 1, activation = "sigmoid") 
     
   network %>% compile(
-    optimizer = "rmsprop", 
+    optimizer = optimizer_rmsprop(learning_rate  = 0.58, rho = 0.32, decay = 0.41), 
     loss = "mse", 
     metrics = c("mae")
   )
 }
 ```
+
+optimizer_rmsprop(learning_rate  = 0.58, rho = 0.32, decay = 0.41)
 
 Note two new functions here, the mean squared error:
 
@@ -150,7 +163,7 @@ where $\hat{y_i}$ is the predicted value, given in our last single-unit layer, a
 # Part 3: k-fold cross validation
 
 ```{r setkFold, echo = TRUE, results = 'hide'}
-k <- 4 # four groups
+k <- 10 # as suggested by caret
 indices <- sample(1:nrow(train_data)) # randomize the training set before splitting for k-fold cross validation:
 folds <- cut(indices, breaks = k, labels = FALSE) # divide the ordered indices into k intervals, labelled 1:k.
 ```
@@ -161,7 +174,7 @@ folds <- cut(indices, breaks = k, labels = FALSE) # divide the ordered indices i
 num_epochs <- 100
 all_scores <- c() # An empty vector to store the results from evaluation
 
-for (i in 1:1) {
+for (i in 1:2) {
   cat("processing fold #", i, "\n")
   # Prepare the validation data: data from partition # k
   val_indices <- which(folds == i, arr.ind = TRUE) 
@@ -210,8 +223,9 @@ K$clear_session()
 
 Train our model:
 
+- the batchsize suggested by caret is very high. Try 500 one time
 ```{r kfold500, echo = T, results = 'hide', cache = T}
-num_epochs <- 1000
+num_epochs <- 100
 all_mae_histories <- NULL  # an empty object to cumulatively store the model metrics
 
 for (i in 1:k) {
@@ -227,14 +241,14 @@ for (i in 1:k) {
   partial_train_targets <- train_targets[-val_indices]
   
   # Build the Keras model (already compiled)
-  model <- build_model()
+  model <- build_base_model()
   
   # Train the model (in silent mode, verbose=0)
   history <- model %>% fit(partial_train_data, 
                            partial_train_targets,
                            validation_data = list(val_data, val_targets),
                            epochs = num_epochs, 
-                           batch_size = 50 , 
+                           batch_size = 100 , 
                            verbose = 0
   )
   mae_history <- history$metrics$val_mae
@@ -258,7 +272,7 @@ p +
 p + 
   geom_smooth(method = 'loess', se = FALSE)
 ```
-Find the lowest value
+#Find the lowest value
 ```{r}
 which(x = average_mae_history$validation_mae == min(average_mae_history))
 average_mae_history
@@ -274,8 +288,8 @@ model <- build_model()
 # Train it on the entirety of the data.
 model %>% fit(train_data, 
               train_targets,
-              epochs = 814, 
-              batch_size = 50, 
+              epochs = 100, 
+              batch_size = 100, 
               verbose = 0)
 
 result <- model %>% evaluate(test_data, test_targets)
@@ -296,4 +310,5 @@ predictions_train <- model %>% predict(x = train_data)
 rmse(test_targets, predictions_test)
 rmse(train_targets, predictions_train)
 ```
+
 

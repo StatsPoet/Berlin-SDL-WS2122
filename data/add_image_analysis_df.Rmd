@@ -45,7 +45,7 @@ dataset_mod[(length(dataset_mod)-4):length(dataset_mod)] <- lapply(X = dataset_m
 dataset_mod <- subset(x = dataset_mod, select = -c(host_id))
 ```
 
-
+# merge dfs
 ```{r}
 image_an_mvars_df <- merge(dataset_mod, det_bright_mean_df, by.x = "id", by.y = "pic_id")
 ```
@@ -71,10 +71,6 @@ image_an_mvars_df <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == 
 image_an_mvars_df <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "brightness_pic_11"):which(colnames(image_an_mvars_df) == "brightness_pic_17"))]
 ```
 
-
-```{r}
-View(image_an_mvars_df[1:10,])
-```
 
 #make sure that there are no lists inside the df
 ```{r}
@@ -103,7 +99,7 @@ sum(unlist(truth_num)) == dim(image_an_mvars_df)[2]
 ```
 
 ```{r}
-View(image_an_mvars_df[0:10,])
+View(image_an_mvars_df[1:10,])
 ```
 
 ```{r}

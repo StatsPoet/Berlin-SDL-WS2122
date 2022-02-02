@@ -20,8 +20,8 @@ load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/
 Because k-fold cross-validation is used, there is no need for a validation set
 
 ```{r}
-## 75% of the sample size
-smp_size <- floor(0.75 * nrow(image_an_mvars_df))
+## 85% of the sample size
+smp_size <- floor(0.85 * nrow(image_an_mvars_df))
 
 ## set the seed to make your partition reproducible
 set.seed(123)
@@ -83,6 +83,9 @@ library(caret)
 library(keras)
 ```
 
+
+Tried to install mxnet but an error occurs. 
+Also tried working with neuralnet, however the process takes too long. TO get an approx. for the params, mlpKerasDropout should do
 ```{r}
 
 train_df <- as.data.frame(train_data)
@@ -97,7 +100,7 @@ test_df <- as.data.frame(test_data)
 large_grid <- expand.grid(
   dropout = seq(from=0.2, to=0.5, by=0.1),
   batch_size = seq(from=16, to=64, by=16),
-  activation = c("tanh","relu"),
+  activation = c("sigmoid","relu"),
   decay = seq(from=0.5, to=0.9, by=0.1),
   lr = seq(from=0.01, to=0.2, by=0.01),
   size = seq(from=5, to=20, by=5),
@@ -105,19 +108,19 @@ large_grid <- expand.grid(
 )
 
 grid_index <- sample(nrow(large_grid),
-                     size=5)
+                     size=60)
 
 hyperparameters <- large_grid[grid_index,]
 
 fit_control <- trainControl(method = "adaptive_cv", 
-                            adaptive = list(min=2, 
+                            adaptive = list(min=5, 
                                             alpha=0.05, 
                                             method="BT", 
                                             complete=FALSE),
                             search = "random")
 
 model <- train(train_df, train_targets, 
-               method = "mlpKerasDropout", 
+               method = ("mlpKerasDropout"), 
                trControl = fit_control,
                preProc = c("center", "scale"),
                verbose = TRUE,
@@ -129,6 +132,7 @@ min_rmse_index <- which.min(results$RMSE)
 rmse_min <- results[min_rmse_index,]$RMSE
 min_par <- results[min_rmse_index,]
 ```
+
 
 ```{r}
 min_par
