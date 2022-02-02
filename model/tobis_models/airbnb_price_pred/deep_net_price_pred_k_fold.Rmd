@@ -11,67 +11,14 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# load in data created by add_image_anaylsis_df
 ```{r}
-load("data/image_an_mvars_df.Rda")
+load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
 ```
-
-```{r}
-image_an_mvars_df <- image_an_mvars_df[,3:length(image_an_mvars_df)]
-```
-
-## leave out longitude and latitude
-```{r}
-image_an_mvars_df <- subset(x = image_an_mvars_df, select = -c(latitude, longitude))
-#View(dataset_mod)
-```
-
-```{r}
-for (i in 1:dim(image_an_mvars_df)[2]){
-  image_an_mvars_df[,i] <-  unlist(image_an_mvars_df[,i])
-}
-```
-
-# check if every column is not a list
-```{r}
-truth_list <- list()
-for (i in 1:dim(image_an_mvars_df)[2]){
-  truth_list[i] <-  is.list(image_an_mvars_df[,i])
-}
-
-sum(unlist(truth_list))
-```
-
-```{r}
-truth_num <- list()
-for (i in 1:dim(image_an_mvars_df)[2]){
-  truth_num[i] <-  which(is.numeric(image_an_mvars_df[,i]))
-}
-
-sum(unlist(truth_num)) 
-dim(image_an_mvars_df)[2]
-```
-
-
-```{r}
-View(image_an_mvars_df)
-```
-
-
-Find out what causes nans to come up
-
-reduce columns
-```{r}
-image_an_mvars_df <- image_an_mvars_df[,1:60]
-```
-
-```{r}
-View(image_an_mvars_df)
-```
-
-
 
 ## split dataset into training and test set.
 Because k-fold cross-validation is used, there is no need for a validation set
+
 ```{r}
 ## 75% of the sample size
 smp_size <- floor(0.75 * nrow(image_an_mvars_df))
@@ -101,27 +48,12 @@ train_data <- subset(x = train_data, select = -c(price))
 test_data <- subset(x = test_data, select = -c(price))
 ```
 
-```{r}
-View(test_data[0:10,])
-```
-
-
 ## transform data to matrix, so that keras can work with it
 ```{r}
 train_targets <- unlist(c(train_targets))
 test_targets <- unlist(c(test_targets))
 train_data <- array(train_data)
 test_data <- array(test_data)
-```
-
-```{r}
-head(train_data)
-```
-
-
-
-```{r}
-#View(train_targets)
 ```
 
 ## standardize data with z-score
@@ -167,17 +99,36 @@ It's only necessary to run this once.
 
 # Part 2: Define Network
 
-## Define the network as a function
+## This is the base model I started with
 
-We're going to call the same model multiple times. So we'll create a function with no arguments that we can call to create our model when ever we want to use it for training. 
+```{r}
+build_base_model <- function() {
+  network <- keras_model_sequential() %>% 
+    layer_dense(units = 64, activation = "relu", input_shape = dim(train_data)[2]) %>% 
+    layer_dense(units = 64, activation = "relu") %>% 
+    layer_dense(units = 1) 
+    
+  network %>% compile(
+    optimizer = "rmsprop", 
+    loss = "mse", 
+    metrics = c("mae")
+  )
+}
+```
 
-Added one additional layer to account for the higher number of variables. Does that make sense?
+## Model in progress
+Added additional layers and units to account for the higher number of variables. 
+For a large input layer the leaky relu is suggested. 
 
 ```{r defModel}
 build_model <- function() {
   network <- keras_model_sequential() %>% 
-    layer_dense(units = 64, activation = "relu", input_shape = dim(train_data)[2]) %>% 
-    layer_dense(units = 64, activation = "relu") %>%
+    layer_dense(units = 600, input_shape = dim(train_data)[2]) %>%
+    layer_activation_leaky_relu() %>%
+    layer_dense(units = 300) %>%
+    layer_activation_leaky_relu() %>%
+    layer_dense(units = 150) %>%
+    layer_activation_leaky_relu() %>%
     layer_dense(units = 1) 
     
   network %>% compile(
@@ -204,47 +155,6 @@ indices <- sample(1:nrow(train_data)) # randomize the training set before splitt
 folds <- cut(indices, breaks = k, labels = FALSE) # divide the ordered indices into k intervals, labelled 1:k.
 ```
 
-#test loop there are nans in the datasets ... find out where they come from
-
-```{r}
-num_epochs <- 100
-all_scores <- c() # An empty vector to store the results from evaluation
-
-i = 1
-cat("processing fold #", i, "\n")
-# Prepare the validation data: data from partition # k
-val_indices <- which(folds == i, arr.ind = TRUE) 
-
-# validation set: the ith partition
-val_data <- train_data[val_indices,]
-val_targets <- train_targets[val_indices]
-
-# Training set: all other partitions
-partial_train_data <- train_data[-val_indices,]
-partial_train_targets <- train_targets[-val_indices]
-
-# Call our model function (see above)
-network <- build_model()
-
-# summary(model)
-# Train the model (in silent mode, verbose=0)
-network %>% fit(partial_train_data,
-                partial_train_targets,
-                epochs = num_epochs,
-                batch_size = 100,
-                verbose = 0)
-              
-# Evaluate the model on the validation data
-results <- network %>% evaluate(val_data, val_targets, verbose = 0)
-all_scores <- c(all_scores, results[2])
-```
-
-```{r}
-View(partial_train_data)
-```
-
-
-
 
 ## test if everything works by running cross val with low num_epoch and high batch size
 
@@ -266,7 +176,7 @@ for (i in 1:k) {
   partial_train_targets <- train_targets[-val_indices]
   
   # Call our model function (see above)
-  network <- build_model()
+  network <- build_base_model() #adjust to eatherbase model or model
   
   # summary(model)
   # Train the model (in silent mode, verbose=0)
@@ -299,10 +209,10 @@ K <- backend()
 K$clear_session()
 ```
 
-Train our the models:
+Train our model:
 
 ```{r kfold500, echo = T, results = 'hide', cache = T}
-num_epochs <- 100 
+num_epochs <- 500 
 all_mae_histories <- NULL  # an empty object to cumulatively store the model metrics
 
 for (i in 1:k) {
@@ -325,7 +235,7 @@ for (i in 1:k) {
                            partial_train_targets,
                            validation_data = list(val_data, val_targets),
                            epochs = num_epochs, 
-                           batch_size = 500, 
+                           batch_size = 50 , 
                            verbose = 0
   )
   mae_history <- history$metrics$val_mae
@@ -356,9 +266,7 @@ average_mae_history
 ```
 
 
-According to this plot, it seems that validation MAE stops improving significantly after circa i epochs. Past that point, we start overfitting.
-
-Once we are done tuning other parameters of our model (besides the number of epochs, we could also adjust the size of the hidden layers), we can train a final "production" model on all of the training data, with the best parameters, then look at its performance on the test data:
+Train model one last time with hyperparameters as defined above
 
 ```{r runZ, echo = F, results = 'hide', cache = T}
 # Get a fresh, compiled model.
@@ -367,7 +275,7 @@ model <- build_model()
 # Train it on the entirety of the data.
 model %>% fit(train_data, 
               train_targets,
-              epochs = 26, 
+              epochs = 500, 
               batch_size = 50, 
               verbose = 0)
 
@@ -378,8 +286,7 @@ result <- model %>% evaluate(test_data, test_targets)
 result
 ```
 
-We are still off by about `r round(result$mean_absolute_error * 1000)`.
-
+# Predict and calc rmse
 ```{r}
 predictions_test <- model %>% predict(x = test_data)
 predictions_train <- model %>% predict(x = train_data)
