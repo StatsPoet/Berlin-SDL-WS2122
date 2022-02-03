@@ -113,9 +113,13 @@ image_an_mvars_df_sums_only  <- image_an_mvars_df_sums_only[,-c(which(colnames(i
 image_an_mvars_df_ind_pic_only  <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "obj_sum"):which(colnames(image_an_mvars_df) == "Washing_machine_sum"))]
 ```
 
+```{r}
+load("image_an_mvars_df_sums_only.Rda")
+```
+
 
 ```{r}
-View(image_an_mvars_df[1:10,])
+View(image_an_mvars_df_sums_only[1:10,])
 ```
 
 ```{r}
