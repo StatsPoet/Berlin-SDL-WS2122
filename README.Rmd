@@ -89,6 +89,21 @@ log("preis") # fuer Lin Reg, not for Random Forests.
     + - Consider Feature Selection algorithms. Consider their relevance and needed work.
     
 
+### R
+In context in model regression. 
+
+-> Generalisierbar: 
+LR: Weniger Variablen rein nehmen. 
+Weight Decay: Ridge, Lasso: Variable Selection: Einzelne Paramentern werden = 0, weil einzelne Variablen faktisch rausgenommen.
+
+Lasso: Linere regression mit Penalty für die Große der Betas: L2 norms: zu diese SS, die ich minimiere, l2 die Großen der betas betraft. 
+\lambda ist mein Tunning parametern und bestimmt, wie stark mein Betas bestraft werden. 
+
+
+Cross Validation: es gibt Funktionen in R eingebaut in Packages. 
+
+
+
 
 ### Report (15 Seiten) (Sebi/Tobi)
 
