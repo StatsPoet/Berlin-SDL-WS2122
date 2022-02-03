@@ -1,0 +1,102 @@
+---
+title: "exc15"
+author: "Tobias_R"
+date: "10 Januar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+rm(list = ls())
+
+library("sp") #needed for coordinate transformation
+library("ggplot2")
+library("OpenStreetMap")
+library("raster") #for borders
+
+# part i)
+rain <- readRDS("spatial_data/rain_deu.rda")
+rain
+head(as.data.frame(rain))
+
+# part ii)
+kmproj <- CRS("+proj=utm +zone=32 ellps=WGS84 +units=km") # specify projection
+rain_proj <- spTransform(rain, kmproj) # transform to new format
+
+rain_proj
+
+plotrain <- data.frame(rain_proj) 
+colnames(plotrain)
+colnames(plotrain)[2] <- "Easting"
+colnames(plotrain)[3] <- "Northing"
+
+plotrain_latlon <- data.frame(rain)
+
+# part iii)
+ggplot(data = plotrain, mapping = aes(x = Easting,
+                                  y = Northing)) + 
+  geom_point(size = 2) +
+  labs(title = "Average rain fall in Germany, January 2015", 
+       x = "Easting", # Always label your axes.
+       y = "Northing") 
+
+# and in degrees...
+ggplot(data = plotrain_latlon, mapping = aes(x = lon,
+                                      y = lat)) + 
+  geom_point(size = 2) +
+  labs(title = "Average rain fall in Germany, January 2015", 
+       x = "Longitude", # Always label your axes.
+       y = "Latitude") 
+
+# part iv)
+# add terrain view with OpenStreetMap
+# we can change the map style with "type"; many different options available
+# indicate minimum and maximum latitude and longitude 
+de_map <- openmap(c(47.41, 5.99), c(54.91, 14.99),
+                 type = "esri-topo", mergeTiles = TRUE)
+de_map
+
+# we can reuse the CRS projection from above
+de_map_proj <- openproj(de_map, projection = kmproj)
+
+de_map_plt <- OpenStreetMap::autoplot.OpenStreetMap(de_map_proj) +
+  geom_point(data = plotrain, mapping = aes(x = Easting,
+                                            y = Northing),
+             size = 2)
+de_map_plt
+
+# # with this projection, we have the margin. Alternative: remain in lat/lon format
+# de_map_projlatlon <- openproj(de_map)
+# de_map_plt <- OpenStreetMap::autoplot.OpenStreetMap(de_map_projlatlon)  +
+#   geom_point(data = plotrain_latlon, mapping = aes(x = lon,
+#                                             y = lat),
+#              size = 2)
+# de_map_plt
+
+
+# part v) based on part iii)
+DEU <- getData("GADM", country = "DEU", level = 0)
+DEU <- spTransform(DEU, CRS("+proj=utm +zone=32 ellps=WGS84 +units=km"))
+DEU
+plot(DEU)
+# change to dataframe representation for ggplot
+DEU_fort <- fortify(DEU)
+DEU_fort
+
+ggplot() +
+  geom_point(data = plotrain, mapping = aes(x = Easting,
+                                            y = Northing, 
+                                            color = rain),
+             size = 2) +
+  geom_path(data = DEU, mapping = aes(x = long, y = lat,
+                                           group = group)) +
+  labs(title = "Average rain fall in Germany, January 2015",
+       x = "Easting",
+       y = "Northing")
+
+
+```
+

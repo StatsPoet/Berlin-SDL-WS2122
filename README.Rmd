@@ -132,6 +132,11 @@ Cross Validation: es gibt Funktionen in R eingebaut in Packages.
 -   tobirinnert@gmail.com
 -   DeepLearningWS2021
 
+##Anmeldedaten für den google account für colab und drive für image analysis
+### ACHTUNG! Die Struktur wurde noch nicht bearbeitet und mehrere Skripte sind paralel am arbeiten. 
+- Mail: deepl.seminar.colab@gmail.com
+- Passwort: nfrNTDSfpW8QkMsV
+
 ## Data
 siehe .Rmd in Data folder. 
 

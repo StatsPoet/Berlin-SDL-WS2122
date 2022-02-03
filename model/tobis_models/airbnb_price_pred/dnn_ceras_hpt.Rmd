@@ -1,0 +1,155 @@
+---
+title: "dnn_ceras_hpt"
+author: "Tobias_R"
+date: "2 Februar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Prepare data
+
+# load in data created by add_image_anaylsis_df
+```{r}
+load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
+```
+
+## split dataset into training and test set.
+Because k-fold cross-validation is used, there is no need for a validation set
+
+```{r}
+## 85% of the sample size
+smp_size <- floor(0.85 * nrow(image_an_mvars_df))
+
+## set the seed to make your partition reproducible
+set.seed(123)
+train_ind <- sample(seq_len(nrow(image_an_mvars_df)), size = smp_size)
+
+train_data <- image_an_mvars_df[train_ind, ]
+test_data <- image_an_mvars_df[-train_ind, ]
+```
+
+```{r}
+View(test_data[0:10,])
+```
+
+
+## trnsform price to log price
+```{r}
+train_targets <- log(train_data["price"]) #vary later to see if val_mae changes
+test_targets <- log(test_data["price"]) #vary later to see if val_mae changes
+
+#train_targets <- train_data["price"] #no log
+#test_targets <- test_data["price"] # no log
+
+train_data <- subset(x = train_data, select = -c(price))
+test_data <- subset(x = test_data, select = -c(price))
+```
+
+## transform data to matrix, so that keras can work with it
+```{r}
+train_targets <- unlist(c(train_targets))
+test_targets <- unlist(c(test_targets))
+train_data <- array(train_data)
+test_data <- array(test_data)
+```
+
+## standardize data with z-score
+should be the same as sebs
+```{r zScores, cache = T}
+# parameters for Scaling:
+mean <- colMeans(train_data) # mean of each column
+std <- apply(train_data, 2, sd) # stdev of each column
+
+# Calculate feature-wise (within-variable) z-scores: (x - mean)/std
+train_data <- scale(train_data, center = mean, scale = std)
+test_data <- scale(test_data, center = mean, scale = std)
+```
+
+```{r}
+View(train_data[1:10,])
+```
+
+
+
+
+
+# Hyperparameter tuning
+
+```{r}
+library(caret)
+library(keras)
+```
+
+
+Tried to install mxnet but an error occurs. 
+TO get an approx. for the params, mlpKerasDropout should do
+```{r}
+
+train_df <- as.data.frame(train_data)
+
+test_df <- as.data.frame(test_data)
+
+
+#train_targets <- as.numeric(train_targets)
+#test_targets <- as.numeric(test_targets)
+
+#define a hyperparameter grid.
+large_grid <- expand.grid(
+  dropout = seq(from=0.2, to=0.5, by=0.1),
+  batch_size = seq(from=16, to=64, by=16),
+  activation = c("sigmoid","relu"),
+  decay = seq(from=0.5, to=0.9, by=0.1),
+  lr = seq(from=0.01, to=0.2, by=0.01),
+  size = seq(from=5, to=20, by=5),
+  rho = seq(from=0.1, to=0.8, by=0.1)
+)
+
+grid_index <- sample(nrow(large_grid),
+                     size=60)
+
+hyperparameters <- large_grid[grid_index,]
+
+fit_control <- trainControl(method = "adaptive_cv", 
+                            adaptive = list(min=5, 
+                                            alpha=0.05, 
+                                            method="BT", 
+                                            complete=FALSE),
+                            search = "random")
+
+model <- train(train_df, train_targets, 
+               method = ("neuralnet"), 
+               trControl = fit_control,
+               preProc = c("center", "scale"),
+               verbose = TRUE,
+               tuneLength = 20,
+               epochs = 50)
+
+results <- model$results
+min_rmse_index <- which.min(results$RMSE)
+rmse_min <- results[min_rmse_index,]$RMSE
+min_par <- results[min_rmse_index,]
+```
+
+
+```{r}
+min_par
+rmse_min
+```
+
+
+```{r}
+#plot 
+plot(1:nrow(results), results$RMSE, xlab="Trial", ylab="RMSE", cex=results$size / max(results$size), col="red", ylim=c(1, 30))
+text(1:nrow(results), results$RMSE, results$activation, offset=.3, pos=3, cex=0.8)
+rect(min_rmse_index-1, rmse_min-1, min_rmse_index+2, rmse_min+2)
+```
+
+```{r}
+predictions_test <- predict(model, test_df)
+rmse(test_targets, predictions_test)
+
+```
+
