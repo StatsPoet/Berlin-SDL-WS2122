@@ -26,5 +26,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ### Sebi
-- 06.03.21 	DeepL paper first
-- 31.02.21 Discrete Choice. 
+- 21  bis 23.02.22: Flight
+- 26 bis 27.02: NA
+- 28.02 bis 03.03: Open to work. 
+- 06.03.22 	DeepL paper first
+- 31.03.22 Discrete Choice. 
