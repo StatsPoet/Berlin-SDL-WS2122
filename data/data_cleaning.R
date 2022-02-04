@@ -126,9 +126,9 @@ mvars <- data[, -c(43:63)] # for model_variables
 # write.csv(x=text, file="data/2_text.csv")
 # write.csv(x=time, file="data/3_time.csv")
 
-save(x=mvars, file="data/1_mvars.Rda")
-save(x=text, file="data/2_text.Rda")
-save(x=time, file="data/3_time.Rda")
+save(mvars, file="data/1_mvars.Rda")
+save(text, file="data/2_text.Rda")
+save(time, file="data/3_time.Rda")
 
 
 
