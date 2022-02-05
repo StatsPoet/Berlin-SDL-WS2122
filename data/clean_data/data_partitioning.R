@@ -4,7 +4,7 @@
 ## Thus, as k-fold CV will be used, the validation set will act as a factual set for all purposes. 
 
 
-#### !!!!!!!!!! Uncommnent the files you want to update !!!!!!!!!!!!!!!!!1
+#### !!!!!!!!!! Uncommnent the the datasets you want to update !!!!!!!!!!!!!!!!!
 
 
 # Dependencies
@@ -53,5 +53,5 @@ nrow(train) + nrow(valid) + nrow(test) == nrow(data)
 # save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "dum_model_test.Rda"))
 
 # # Save absolute frequencies data
-# save(train, valid , file = here("data", "abs_model_data.Rda"))
+# save(train, valid , full,  file = here("data", "abs_model_data.Rda"))
 # save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "abs_model_test.Rda"))
