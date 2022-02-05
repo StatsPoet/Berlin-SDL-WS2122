@@ -27,7 +27,7 @@ det_bright_mean_df <- pd$read_pickle("det_bright_mean_df")
 
 
 ```{r}
-load(here("data","1_mvars.Rda"))
+load(here("data", "clean_data", "1_mvars.Rda"))
 dataset_mod <- mvars
 ```
 
@@ -132,14 +132,14 @@ View(image_an_mvars_df_ind_pic_only[1:10,])
 
 - complete data with dummies and no absolute frequencies 
 ```{r}
-save(image_an_mvars_df_ind_pic_only ,file="5_fulldata_dum.Rda")
+save(image_an_mvars_df_ind_pic_only ,file= here("data", "clean_data","5_fulldata_dum.Rda"))
 ```
 
 - complete data
 
 ```{r}
 # save(image_an_mvars_df ,file="image_an_mvars_df.Rda")
-save(image_an_mvars_df ,file="4_fulldata.Rda")
+save(image_an_mvars_df ,file= here("data", "clean_data","4_fulldata.Rda"))
 ```
 
 
@@ -147,7 +147,7 @@ save(image_an_mvars_df ,file="4_fulldata.Rda")
 
 ```{r}
 # save(image_an_mvars_df_sums_only ,file="image_an_mvars_df_sums_only.Rda")
-save(image_an_mvars_df_sums_only ,file="6_fulldata_abs.Rda") # Full data with absolute frequencies.
+save(image_an_mvars_df_sums_only ,file= here("data", "clean_data","6_fulldata_abs.Rda")) # Full data with absolute frequencies.
 ```
 
 
