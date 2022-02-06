@@ -1,11 +1,18 @@
 # Lasso Full model 
 
+## Lasso: Linere regression mit Penalty für die Große der Betas: L2 norms:
+# zu diese SS, die ich minimiere, l2 die grosserer Betas betraft. 
+# \lambda ist mein Tunning parametern und bestimmt, wie stark mein Betas bestraft werden. 
+
 ## Setting: 
 # We choose a grid of λ values, and compute the cross-validation error for each value of λ.
 # The unregularized case is λ = 0.01
 # We expect the coefficient estimates to be much smaller, in terms of ℓ2 norm, when a large value of λ is used. 
 # then select the tuning parameter value for which the cross-validation error is smallest. 
 # Finally, the model is re-fit using all of the available observations and the selected value of the tuning parameter.
+
+ 
+
 
 
 # Dependencies 
@@ -96,3 +103,7 @@ qr(x_v)$rank # 323
 
 
 
+# 2. Training and validation set:
+valid_id <- sample (1:nrow(full), floor(0.9 * nrow(full)))
+train <- full[valid_id,]
+valid <- full[-valid_id,]

@@ -18,17 +18,6 @@ knitr::opts_chunk$set(echo = TRUE,
 
 # Analysis of Berlins Airbnb Data using statistical and deep learning methods. 
 
-## TO DO
-
-## Orga
-- a concrete scope of the project (to avoid working in vain).  
-
-
-### Data preprocesing (Sebi/Tobi)
-#### Listings : Turn to metric
-- seasson (summer/winter variable). 
-- Tobi runs Werkstudent script to create custum seasson variable. 
-
 #### Bild (Tobi)
 
 - Detection mit allen flat_bildern machen und data.frame auf r-projekt
@@ -39,27 +28,14 @@ knitr::opts_chunk$set(echo = TRUE,
 - add more classes and delete some
 - change the size of pictures scraped to the size of picture the model is trained on
 
-##### Farbe/helligkeit
+#### Farbe/helligkeit
 
-- Möglichkeit mit pillow package in python
 - Kelvin si colour
-- Lumen unit
 
-##### Bildqualität mit cnn
+#### Bildqualität mit cnn
 
-##### Picture Scene analsis
-- das gleiche skript nutzt matse. 
-- muss lokal aufgebaut werden dann sollte es laut matse klappen
 
-### Text i.e reviews /NLP
-- Word stemming von isi projekt (tobi arbeit)  auf rviews anwenden
-- Vielleicht intervalle bilden
-- Seb macht zuerst noch weiter und deligiert dann
-
-### Analisis/Model Construction 
-#### Training and Test
-- Partition of data in training and test
-
+#### Analisis/Model Construction 
 
 #### Regression (Sebi)
 - Run regression without latitutude, longitude 
@@ -87,42 +63,7 @@ log("preis") # fuer Lin Reg, not for Random Forests.
     + - Consider Feature Selection algorithms. Consider their relevance and needed work.
     
 
-### R
-In context in model regression. 
-
--> Generalisierbar: 
-LR: Weniger Variablen rein nehmen. 
-Weight Decay: Ridge, Lasso: Variable Selection: Einzelne Paramentern werden = 0, weil einzelne Variablen faktisch rausgenommen.
-
-Lasso: Linere regression mit Penalty für die Große der Betas: L2 norms: zu diese SS, die ich minimiere, l2 die Großen der betas betraft. 
-\lambda ist mein Tunning parametern und bestimmt, wie stark mein Betas bestraft werden. 
-
-
-Cross Validation: es gibt Funktionen in R eingebaut in Packages. 
-
-
-
-
 ### Report (15 Seiten) (Sebi/Tobi)
-
-#### Write (Sebi/Tobi)
-
-
-
-#### Literature (Sebi/Tobi)
-
-- Für picture detection websiten direkt auf citavi
-- Citavi grupieren und sortieren
--	Reference website und save als pdf oder über local file also pdfs runterladen
-- Alle angeschauten modelle zu detection und segmentation auf citavi in die gliederung die seb eröffnet
-- "Wissen" fenster auf citavi für cnn weitermachen
-
- 
-
-### Best practices
-- Für Tobi: Branching in GIT
-- Citavi: Add references and inmediatly document the corresponding PDF
-
 
 
 
@@ -135,8 +76,6 @@ Cross Validation: es gibt Funktionen in R eingebaut in Packages.
 - Mail: deepl.seminar.colab@gmail.com
 - Passwort: nfrNTDSfpW8QkMsV
 
-## Data
-siehe .Rmd in Data folder. 
 
 
 

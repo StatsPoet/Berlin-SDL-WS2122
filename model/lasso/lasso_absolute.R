@@ -78,7 +78,7 @@ sqrt(mean (( mean(y_t) - y_v)^2))
 
 
 # Fit model with full data:
-out <- glmnet(x, y, alpha = 1, lambda  = grid)
+out <- glmnet(x, y, alpha = 1)#, lambda  = grid)
 lasso.coef <- predict(out , type = "coefficients", s = bestlam)#[1:20, ]
 
 # See coefficients that weren't set to 0. 
