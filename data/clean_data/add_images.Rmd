@@ -47,6 +47,11 @@ dataset_mod[(length(dataset_mod)-4):length(dataset_mod)] <- lapply(X = dataset_m
 dataset_mod <- subset(x = dataset_mod, select = -c(host_id))
 ```
 
+```{r}
+View(dataset_mod)
+```
+
+
 # merge dfs
 ```{r}
 image_an_mvars_df <- merge(dataset_mod, det_bright_mean_df, by.x = "id", by.y = "pic_id")
@@ -66,11 +71,11 @@ image_an_mvars_df <- subset(x = image_an_mvars_df, select = -c(latitude, longitu
 ## Take only individual data from the first 10 pictures. 
 The rest of the data gives not enough information to train the model. Training with the according columns only results in Nan
 ```{r}
-image_an_mvars_df <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "Alarm_clock_pic_11"):which(colnames(image_an_mvars_df) == "Washing_machine_pic_17"))]
+image_an_mvars_df <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "Alarm_clock_pic_10"):which(colnames(image_an_mvars_df) == "Washing_machine_pic_17"))]
 ```
 
 ```{r}
-image_an_mvars_df <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "brightness_pic_11"):which(colnames(image_an_mvars_df) == "brightness_pic_17"))]
+image_an_mvars_df <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "brightness_pic_10"):which(colnames(image_an_mvars_df) == "brightness_pic_17"))]
 ```
 
 
@@ -103,9 +108,9 @@ sum(unlist(truth_num)) == dim(image_an_mvars_df)[2]
 
 ## Create a data set with exlcluding dummies and including absolute frequencies variables. 
 
-Remove all dummy variables with "Bathroom_cabinet_pic_0" being the first dummy and "Washing_machine_pic_10" the last. 
+Remove all dummy variables with "Bathroom_cabinet_pic_0" being the first dummy and "Washing_machine_pic_9" the last. 
 ```{r}
-image_an_mvars_df_sums_only  <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "Bathroom_cabinet_pic_0"):which(colnames(image_an_mvars_df) == "Washing_machine_pic_10"))]
+image_an_mvars_df_sums_only  <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "Bathroom_cabinet_pic_0"):which(colnames(image_an_mvars_df) == "Washing_machine_pic_9"))]
 ```
 
 Remove "obj_sum"
@@ -143,7 +148,7 @@ save(image_an_mvars_df ,file= here("data", "clean_data","4_fulldata.Rda"))
 ```
 
 
-- complete data with  absolute frequencies and no dummies
+- complete data with absolute frequencies and no dummies
 
 ```{r}
 # save(image_an_mvars_df_sums_only ,file="image_an_mvars_df_sums_only.Rda")
