@@ -125,6 +125,7 @@ image_an_mvars_df_ind_pic_only  <- image_an_mvars_df[,-c(which(colnames(image_an
 ```
 
 ```{r}
+any(image_an_mvars_df_ind_pic_only[,"brightness_mean"] == 0)
 all(is.numeric(image_an_mvars_df_ind_pic_only[,"brightness_mean"]))
 ```
 
