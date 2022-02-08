@@ -58,6 +58,10 @@ sort(colMeans(is.na.data.frame(data)))
 # data_s <- data[1:300,]
 # dates_s <- dates[1:300,]
 
+# Host liststings count is the same
+all.equal(data$host_listings_count, data$host_total_listings_count)
+data[c("host_total_listings_count")] <- NULL
+
 # bathrooms and calendar_updated and licence: virtually absent. Drop them 
 data[c("bathrooms",
        "license",
@@ -117,9 +121,9 @@ data <- data[,names(sort(unlist(lapply(data, class)), decreasing = T))]
 
 ## Separate dataset between facts, text and dates (again)
 
-time <- data[,43:47]
-text <- data[,48:63]
-mvars <- data[, -c(43:63)] # for model_variables
+time <- data[,42:46]
+text <- data[,47:62]
+mvars <- data[, -c(42:62)] # for model_variables
 
 # ## Export datasets.
 # write.csv(x=mvars, file="data/1_mvars.csv")

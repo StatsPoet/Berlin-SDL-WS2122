@@ -47,7 +47,7 @@ dataset_mod[(length(dataset_mod)-4):length(dataset_mod)] <- lapply(X = dataset_m
 dataset_mod <- subset(x = dataset_mod, select = -c(host_id))
 ```
 
-```{r}
+```{r eval=FALSE, include=FALSE}
 View(dataset_mod)
 ```
 
