@@ -1,0 +1,164 @@
+---
+title: "add_image_df"
+author: "Tobias_R"
+date: "1 Februar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Dependencies
+```{r}
+library(readr)
+library(reticulate)
+library(here)
+```
+
+
+Load image_df in:
+
+```{r}
+pd <- import("pandas")
+det_bright_mean_df <- pd$read_pickle("det_bright_mean_df")
+#pic_id == id
+```
+
+
+```{r}
+load(here("data", "clean_data", "1_mvars.Rda"))
+dataset_mod <- mvars
+```
+
+
+```{r}
+det_bright_mean_df <- subset(x = det_bright_mean_df, select = -c(pic_paths,detect_obj))
+```
+
+
+## transform logical values to binary 
+```{r}
+dataset_mod[(length(dataset_mod)-4):length(dataset_mod)] <- lapply(X = dataset_mod[(length(dataset_mod)-4):length(dataset_mod)], FUN = as.numeric)
+#View(dataset_mod[(length(dataset_mod)-4):length(dataset_mod)])
+```
+
+```{r}
+dataset_mod <- subset(x = dataset_mod, select = -c(host_id))
+```
+
+```{r eval=FALSE, include=FALSE}
+View(dataset_mod)
+```
+
+
+# merge dfs
+```{r}
+image_an_mvars_df <- merge(dataset_mod, det_bright_mean_df, by.x = "id", by.y = "pic_id")
+```
+
+# leave out id etc
+```{r}
+image_an_mvars_df <- image_an_mvars_df[,3:length(image_an_mvars_df)]
+```
+
+## leave out longitude and latitude
+```{r}
+image_an_mvars_df <- subset(x = image_an_mvars_df, select = -c(latitude, longitude))
+#View(dataset_mod)
+```
+
+## Take only individual data from the first 10 pictures. 
+The rest of the data gives not enough information to train the model. Training with the according columns only results in Nan
+```{r}
+image_an_mvars_df <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "Alarm_clock_pic_10"):which(colnames(image_an_mvars_df) == "Washing_machine_pic_17"))]
+```
+
+```{r}
+image_an_mvars_df <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "brightness_pic_10"):which(colnames(image_an_mvars_df) == "brightness_pic_17"))]
+```
+
+
+#make sure that there are no lists inside the df
+```{r}
+for (i in 1:dim(image_an_mvars_df)[2]){
+  image_an_mvars_df[,i] <-  unlist(image_an_mvars_df[,i])
+}
+```
+
+# check if every column is not a list
+```{r}
+truth_list <- list()
+for (i in 1:dim(image_an_mvars_df)[2]){
+  truth_list[i] <-  is.list(image_an_mvars_df[,i])
+}
+
+sum(unlist(truth_list)) == 0
+```
+## check if every value is numeric
+
+```{r}
+truth_num <- list()
+for (i in 1:dim(image_an_mvars_df)[2]){
+  truth_num[i] <-  which(is.numeric(image_an_mvars_df[,i]))
+}
+
+sum(unlist(truth_num)) == dim(image_an_mvars_df)[2]
+```
+
+## Create a data set with exlcluding dummies and including absolute frequencies variables. 
+
+Remove all dummy variables with "Bathroom_cabinet_pic_0" being the first dummy and "Washing_machine_pic_9" the last. 
+```{r}
+image_an_mvars_df_sums_only  <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "Bathroom_cabinet_pic_0"):which(colnames(image_an_mvars_df) == "Washing_machine_pic_9"))]
+```
+
+Remove "obj_sum"
+```{r}
+image_an_mvars_df_sums_only  <- image_an_mvars_df_sums_only[,-c(which(colnames(image_an_mvars_df_sums_only) == "obj_sum"))]
+```
+
+## Create a data set including dummies and excluding absolute frequencies variables
+
+```{r}
+image_an_mvars_df_ind_pic_only  <- image_an_mvars_df[,-c(which(colnames(image_an_mvars_df) == "obj_sum"):which(colnames(image_an_mvars_df) == "Washing_machine_sum"))]
+```
+
+```{r}
+any(image_an_mvars_df_ind_pic_only[,"brightness_mean"] == 0)
+all(is.numeric(image_an_mvars_df_ind_pic_only[,"brightness_mean"]))
+```
+
+
+
+## Visually inspect datasets
+```{r eval=FALSE, include=FALSE}
+View(image_an_mvars_df_sums_only[1:10,])
+View(image_an_mvars_df[1:10,])
+View(image_an_mvars_df_ind_pic_only[1:10,])
+```
+
+## Save datasets
+
+- complete data with dummies and no absolute frequencies 
+```{r}
+save(image_an_mvars_df_ind_pic_only ,file= here("data", "clean_data","5_fulldata_dum.Rda"))
+```
+
+- complete data
+
+```{r}
+# save(image_an_mvars_df ,file="image_an_mvars_df.Rda")
+save(image_an_mvars_df ,file= here("data", "clean_data","4_fulldata.Rda"))
+```
+
+
+- complete data with absolute frequencies and no dummies
+
+```{r}
+# save(image_an_mvars_df_sums_only ,file="image_an_mvars_df_sums_only.Rda")
+save(image_an_mvars_df_sums_only ,file= here("data", "clean_data","6_fulldata_abs.Rda")) # Full data with absolute frequencies.
+```
+
+
+
