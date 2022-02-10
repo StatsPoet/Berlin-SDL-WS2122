@@ -16,7 +16,7 @@ library(here)
 # load in data created by add_image_anaylsis_df
 ```{r}
 # load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
-load(here("data","clean_data","4_fulldata.Rda"))
+load(here("data","metric_pic.Rda"))
 ```
 
 ## split dataset into training and test set.
