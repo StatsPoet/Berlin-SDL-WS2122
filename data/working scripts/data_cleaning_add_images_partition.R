@@ -137,31 +137,27 @@ mvars <- data[, -c(42:62)] # for metric_variables
 
 #Add images:
 #------------------------------------- 
-pd <- import("pandas")
-det_bright_mean_df <- pd$read_pickle("det_bright_mean_df")
+pd <- import("pandas") 
+bilder <- pd$read_pickle(here("data", "raw_data", "1_bilder"))
 #pic_id == id
 
 ## Load dataset
 # load(here("data", "clean_data", "1_mvars.Rda"))
 # dataset_mod <- mvars
 
-## ??
-det_bright_mean_df <- subset(x = det_bright_mean_df, select = -c(pic_paths,detect_obj))
+## delete pic_paths and detected objects
+bilder <- subset(x = bilder, select = -c(pic_paths,detect_obj))
 
 ## transform logical values to binary 
 mvars[(length(mvars)-4):length(mvars)] <- lapply(X = mvars[(length(mvars)-4):length(mvars)], FUN = as.numeric)
 #View(mvars[(length(mvars)-4):length(mvars)])
 
-## ??
+## delete host_id
 mvars <- subset(x = mvars, select = -c(host_id))
 # View(mvars)
 
 ##---------------- Merge Dataframe: 
-metric_pic <- merge(mvars, det_bright_mean_df, by.x = "id", by.y = "pic_id")
-
-# # leave out id etc
-
-metric_pic <- metric_pic[,3:length(metric_pic)]
+metric_pic <- merge(mvars, bilder, by.x = "id", by.y = "pic_id")
 
 
 ## leave out longitude and latitude
@@ -178,7 +174,7 @@ metric_pic <-
   )]
 
 
-## ?
+## remove brightness for pictures 10 - 17
 metric_pic <-
   metric_pic[, -c(which(colnames(metric_pic) == "brightness_pic_10"):which(colnames(metric_pic) == "brightness_pic_17"))]
 
@@ -210,6 +206,11 @@ metric_pic_abs  <-
     which(colnames(metric_pic) == "Bathroom_cabinet_pic_0"):which(colnames(metric_pic) == "Washing_machine_pic_9")
   )]
 
+metric_pic_abs  <-
+  metric_pic_abs[, -c(
+    which(colnames(metric_pic_abs) == "brightness_pic_0"):which(colnames(metric_pic_abs) == "brightness_pic_9")
+  )]
+
 ## Remove "obj_sum"
 metric_pic_abs  <-
   metric_pic_abs[, -c(which(colnames(metric_pic_abs) == "obj_sum"))]
@@ -217,8 +218,11 @@ metric_pic_abs  <-
 ## Create a data set including dummies and excluding absolute frequencies variables
 metric_pic_dum  <-
   metric_pic[, -c(which(colnames(metric_pic) == "obj_sum"):which(colnames(metric_pic) == "Washing_machine_sum"))]
-any(metric_pic_dum[, "brightness_mean"] == 0)
-all(is.numeric(metric_pic_dum[, "brightness_mean"]))
+
+metric_pic_dum <- subset(x = metric_pic_dum, select = -c(brightness_mean))
+
+#any(metric_pic_dum[, "brightness_mean"] == 0)
+#all(is.numeric(metric_pic_dum[, "brightness_mean"]))
 
 ## Visually inspect datasets
 # View(metric_pic_abs[1:10,])
@@ -228,15 +232,49 @@ all(is.numeric(metric_pic_dum[, "brightness_mean"]))
 # Add Temperature:
 #------------
 
+temperature <- pd$read_pickle(here("data", "raw_data", "2_temperature"))
+
+#there are some values (707) which are very large for some reason. They need to be removed. 
+temperature <- temperature[-c(which(temperature$cct_mean > 100000)), ]
+
+## check if every column is not a list
+truth_list <- list()
+for (i in 1:dim(temperature)[2]) {
+  truth_list[i] <-  is.list(temperature[, i])
+}
+sum(unlist(truth_list)) == 0
+
+## check if every value is numeric
+truth_num <- list()
+for (i in 1:dim(temperature)[2]) {
+  truth_num[i] <-  which(is.numeric(temperature[, i]))
+}
+sum(unlist(truth_num)) == dim(temperature)[2]
+
+# make one df with only the mean
+temp_mean <- temperature[c("pic_id", "cct_mean")]
+
+# make one df with only the values for each picture
+temp_pics <- subset(x = temperature, select = -c(cct_mean))
+
+metric_pic_final <- merge(metric_pic, temperature, by.x = "id", by.y = "pic_id")
+
+metric_pic_dum_final <- merge(metric_pic_dum, temp_pics, by.x = "id", by.y = "pic_id")
+
+metric_pic_abs_final <- merge(metric_pic_abs, temp_mean, by.x = "id", by.y = "pic_id")
+
+# # leave out id etc
+
+metric_pic_final  <- metric_pic_final[, -c(which(colnames(metric_pic_final) == "id"))]
+metric_pic_dum_final  <- metric_pic_dum_final[, -c(which(colnames(metric_pic_dum_final) == "id"))]
+metric_pic_abs_final  <- metric_pic_abs_final[, -c(which(colnames(metric_pic_abs_final) == "id"))]
+
+metric_pic  <- metric_pic[, -c(which(colnames(metric_pic) == "id"))]
 
 
-
-
-
-
-
-
-
+#View(metric_pic_final[1:10,])
+#View(metric_pic_dum_final[1:10,])
+#View(metric_pic_abs_final[1:10,])
 #------------------------------------------ Partitioning
 
 ## Global Data Partitioning
@@ -248,6 +286,8 @@ all(is.numeric(metric_pic_dum[, "brightness_mean"]))
 # Thus, train/validation partition is relegated to every single model for consistency, 
 
 
+
+# create data missing temperature
 #--------------- Full Data
 
 # Proportion 90:10
@@ -302,3 +342,61 @@ nrow(work) + nrow(test)  == nrow(metric_pic_abs)
 save(work,  file = here("data", "metric_pic_abs.Rda"))
 save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_test.Rda"))
 
+
+
+
+
+# create data with temperature
+#--------------- Full Data
+
+# Proportion 90:10
+rm(data, work, test, id)
+set.seed (69)
+id <- createDataPartition(metric_pic_final$price, p = .9, 
+                          list = FALSE, 
+                          times = 1)
+work <- metric_pic_final[id,]
+test <- metric_pic_final[-id,]
+# Inspection
+nrow(work) + nrow(test)  == nrow(metric_pic_final)
+
+# Save full
+save(work, file = here("data", "metric_pic_final.Rda"))
+save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_final_test.Rda"))
+
+#------------------------- Dummies
+rm(data, work, test, id)
+
+# Proportion 90:10
+set.seed (69)
+id <- createDataPartition(metric_pic_dum_final$price, p = .9, 
+                          list = FALSE, 
+                          times = 1)
+work <- metric_pic_dum_final[id,]
+test <- metric_pic_dum_final[-id,]
+
+# Inspection
+nrow(work) + nrow(test)  == nrow(metric_pic_dum_final)
+
+
+# Save full
+save(work, file = here("data", "metric_pic_dum_final.Rda"))
+save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_dum_final_test.Rda"))
+
+#------------------------- Absolute frequencies
+rm(data, work, test, id)
+
+# Proportion 90:10
+set.seed (69)
+id <- createDataPartition(metric_pic_abs_final$price, p = .9, 
+                          list = FALSE, 
+                          times = 1)
+work <- metric_pic_abs_final[id,]
+test <- metric_pic_abs_final[-id,]
+# Inspection
+nrow(work) + nrow(test)  == nrow(metric_pic_abs_final)
+
+
+# Save absolute frequencies data
+save(work,  file = here("data", "metric_pic_abs_final.Rda"))
+save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_final_test.Rda"))
