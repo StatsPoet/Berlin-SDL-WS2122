@@ -14,8 +14,8 @@ library(reticulate)
 
 options(scipen = 999)
 
-
-#----------------------- Data Import:
+# Data import and Cleaning 
+#----------------------- 
 # To Do:
 
 grand_listings <- read_csv(here("data","raw_data","listings.csv.gz"))
@@ -135,8 +135,8 @@ mvars <- data[, -c(42:62)] # for metric_variables
 # save(text, file="data/2_text.Rda")
 # save(time, file="data/3_time.Rda")
 
-
-#------------------------------------- Add images:
+#Add images:
+#------------------------------------- 
 pd <- import("pandas")
 det_bright_mean_df <- pd$read_pickle("det_bright_mean_df")
 #pic_id == id
@@ -224,6 +224,18 @@ all(is.numeric(metric_pic_dum[, "brightness_mean"]))
 # View(metric_pic_abs[1:10,])
 # View(metric_pic[1:10,])
 # View(metric_pic_dum[1:10,])
+
+# Add Temperature:
+#------------
+
+
+
+
+
+
+
+
+
 
 #------------------------------------------ Partitioning
 

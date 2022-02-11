@@ -11,7 +11,7 @@ library(dplyr)
 options(scipen=999)
 
 # Load full data
-load(here("data", "metric_pic_abs.Rda"))
+load(here("data", "metric_pic_dum.Rda"))
 
 # Partition data
 set.seed (69)
@@ -38,6 +38,7 @@ y <- work$price
 qr(x)$rank == ncol(work)-1
 qr(x_t)$rank == ncol(work)-1
 qr(x_v)$rank == ncol(work)-1
+
 
 
 # Train Models

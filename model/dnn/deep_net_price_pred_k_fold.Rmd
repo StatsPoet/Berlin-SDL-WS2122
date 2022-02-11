@@ -125,7 +125,9 @@ build_base_model <- function() {
 Added additional layers and units to account for the higher number of variables. 
 For a large input layer the leaky relu is suggested. 
 
-- i use sigmoid only in the last one eventhough caret suggests it in general. But if i use leaky_relu i can present it. Since it could help with a large dataframe, it makes sense here
+- i use sigmoid only in the last one even though caret suggests it in general. 
+But if i use leaky_relu i can present it. 
+Since it could help with a large data frame, it makes sense here
 ```{r defModel}
 build_model <- function() {
   network <- keras_model_sequential() %>% 
@@ -147,7 +149,7 @@ build_model <- function() {
     layer_dense(units = 1, activation = "sigmoid") 
     
   network %>% compile(
-    optimizer = optimizer_rmsprop(learning_rate  = 0.58, rho = 0.32, decay = 0.41), 
+    optimizer = optimizer_rmsprop(learning_rate  = 0.58, rho = 0.32, decay = 0.41),  #!!!!!!
     loss = "mse", 
     metrics = c("mae")
   )
