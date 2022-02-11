@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 library(caret)
 library(here)
+library(Metrics)
 ```
 
 #Prepare data
@@ -16,22 +17,29 @@ library(here)
 # load in data created by add_image_anaylsis_df
 ```{r}
 # load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
-load(here("data","metric_pic.Rda"))
+load(here("data","metric_pic_abs_final.Rda"))
 ```
+
+#Choose data set
+```{r}
+data <- work
+#View(data[1:10,])
+```
+
 
 ## split dataset into training and test set.
 Because k-fold cross-validation is used, there is no need for a validation set
 
 ```{r}
 ## 85% of the sample size
-smp_size <- floor(0.85 * nrow(image_an_mvars_df))
+smp_size <- floor(0.85 * nrow(data))
 
 ## set the seed to make your partition reproducible
 set.seed(123)
-train_ind <- sample(seq_len(nrow(image_an_mvars_df)), size = smp_size)
+train_ind <- sample(seq_len(nrow(data)), size = smp_size)
 
-train_data <- image_an_mvars_df[train_ind, ]
-test_data <- image_an_mvars_df[-train_ind, ]
+train_data <- data[train_ind, ]
+test_data <- data[-train_ind, ]
 ```
 
 ```{r}
@@ -89,31 +97,19 @@ library(keras)
 
 Tried to install mxnet but an error occurs. 
 TO get an approx. for the params, mlpKerasDropout should do
-```{r}
+For the dum data set, even for a neuralnet with layers of 500 the std can not be computed. My best guess is, that similiar to the problem with the deep_net script, the informations inside the dummi data set is just not high enough. For dum set with mlpdropout only nans were computed. I guess its the same reason as for the neuralnet. 
 
+The idea behind using neuralnet was to have a analytical way of tuning the architecture of our dnn.
+
+But even for the abs data set, the neuralnet did also not work. 
+
+However the mlpKerasDroput works. So we use that and then set the architecture of our nn our selfes.
+
+
+```{r}
 train_df <- as.data.frame(train_data)
 
 test_df <- as.data.frame(test_data)
-
-
-#train_targets <- as.numeric(train_targets)
-#test_targets <- as.numeric(test_targets)
-
-#define a hyperparameter grid.
-large_grid <- expand.grid(
-  dropout = seq(from=0.2, to=0.5, by=0.1),
-  batch_size = seq(from=16, to=64, by=16),
-  activation = c("sigmoid","relu"),
-  decay = seq(from=0.5, to=0.9, by=0.1),
-  lr = seq(from=0.01, to=0.2, by=0.01),
-  size = seq(from=5, to=20, by=5),
-  rho = seq(from=0.1, to=0.8, by=0.1)
-)
-
-grid_index <- sample(nrow(large_grid),
-                     size=60)
-
-hyperparameters <- large_grid[grid_index,]
 
 fit_control <- trainControl(method = "adaptive_cv", 
                             adaptive = list(min=5, 
@@ -123,23 +119,25 @@ fit_control <- trainControl(method = "adaptive_cv",
                             search = "random")
 
 model <- train(train_df, train_targets, 
-               method = ("neuralnet"), 
+               method = "mlpKerasDropout", 
                trControl = fit_control,
                preProc = c("center", "scale"),
                verbose = TRUE,
                tuneLength = 20,
                epochs = 50)
 
+preds <- predict(model, test_df)
+```
+
+```{r}
 results <- model$results
 min_rmse_index <- which.min(results$RMSE)
 rmse_min <- results[min_rmse_index,]$RMSE
-min_par <- results[min_rmse_index,]
 ```
 
 
 ```{r}
-min_par
-rmse_min
+results[min_rmse_index,]
 ```
 
 

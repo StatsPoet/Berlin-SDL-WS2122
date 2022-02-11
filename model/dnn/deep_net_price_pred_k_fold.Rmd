@@ -1,4 +1,4 @@
----
+ ---
 title: "data_inspection and preperation"
 author: "Tobias_R"
 date: "28 Januar 2022"
@@ -17,22 +17,31 @@ library(here)
 # load in data created by add_image_anaylsis_df
 ```{r}
 # load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
-load(here("data","metric_pic.Rda"))
+load(here("data","metric_pic_abs_final.Rda"))
 ```
+
+```{r}
+#Choose data set
+```{r}
+data <- work
+#View(data[1:10,])
+```
+```
+
 
 ## split dataset into training and test set.
 Because k-fold cross-validation is used, there is no need for a validation set
 
 ```{r}
 ## 85% of the sample size
-smp_size <- floor(0.85 * nrow(image_an_mvars_df))
+smp_size <- floor(0.85 * nrow(data))
 
 ## set the seed to make your partition reproducible
 set.seed(123)
-train_ind <- sample(seq_len(nrow(image_an_mvars_df)), size = smp_size)
+train_ind <- sample(seq_len(nrow(data)), size = smp_size)
 
-train_data <- image_an_mvars_df[train_ind, ]
-test_data <- image_an_mvars_df[-train_ind, ]
+train_data <- data[train_ind, ]
+test_data <- data[-train_ind, ]
 ```
 
 ```{r}
@@ -121,15 +130,33 @@ build_base_model <- function() {
 }
 ```
 
-## Model in progress
-Added additional layers and units to account for the higher number of variables. 
+
+## Model for the abs data set
+```{r}
+build_abs_model <- function() {
+  network <- keras_model_sequential() %>% 
+    layer_dense(units = 64, activation = "sigmoid", input_shape = dim(train_data)[2]) %>% 
+    layer_dense(units = 64, activation = "sigmoid") %>% 
+    layer_dense(units = 1, sigmoid) 
+    
+  network %>% compile(
+    optimizer = "rmsprop", 
+    loss = "mse", 
+    metrics = c("mae")
+  )
+}
+```
+
+
+## Model in progress for dummi set
+Added additional layers and units to account for the higher number of variables in the dum set. 
 For a large input layer the leaky relu is suggested. 
 
 - i use sigmoid only in the last one even though caret suggests it in general. 
 But if i use leaky_relu i can present it. 
 Since it could help with a large data frame, it makes sense here
 ```{r defModel}
-build_model <- function() {
+build_dum_model <- function() {
   network <- keras_model_sequential() %>% 
     layer_dense(units = 400, input_shape = dim(train_data)[2]) %>%
     layer_activation_leaky_relu() %>%
@@ -149,7 +176,7 @@ build_model <- function() {
     layer_dense(units = 1, activation = "sigmoid") 
     
   network %>% compile(
-    optimizer = optimizer_rmsprop(learning_rate  = 0.58, rho = 0.32, decay = 0.41),  #!!!!!!
+    optimizer = optimizer_rmsprop(learning_rate  = 0.58, rho = 0.32, decay = 0.41),  
     loss = "mse", 
     metrics = c("mae")
   )
@@ -177,10 +204,10 @@ folds <- cut(indices, breaks = k, labels = FALSE) # divide the ordered indices i
 
 ## test if everything works by running cross val with low num_epoch , high batch size, k = 1 and base_model
 ```{r kfold100, cache = T}
-num_epochs <- 100
+num_epochs <- 10
 all_scores <- c() # An empty vector to store the results from evaluation
 
-for (i in 1:2) {
+for (i in 1:1) {
   cat("processing fold #", i, "\n")
   # Prepare the validation data: data from partition # k
   val_indices <- which(folds == i, arr.ind = TRUE) 
@@ -201,7 +228,7 @@ for (i in 1:2) {
   network %>% fit(partial_train_data,
                   partial_train_targets,
                   epochs = num_epochs,
-                  batch_size = 100,
+                  batch_size = 500,
                   verbose = 0)
                 
   # Evaluate the model on the validation data
@@ -227,7 +254,7 @@ K <- backend()
 K$clear_session()
 ```
 
-Train our model:
+Train abs_model with suggested hp from caret:
 
 - the batchsize suggested by caret is very high. Try 500 one time
 ```{r kfold500, echo = T, results = 'hide', cache = T}
@@ -247,7 +274,7 @@ for (i in 1:k) {
   partial_train_targets <- train_targets[-val_indices]
   
   # Build the Keras model (already compiled)
-  model <- build_base_model()
+  model <- build_model()
   
   # Train the model (in silent mode, verbose=0)
   history <- model %>% fit(partial_train_data, 
