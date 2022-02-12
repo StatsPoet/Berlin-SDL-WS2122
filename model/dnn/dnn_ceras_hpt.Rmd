@@ -124,7 +124,7 @@ model <- train(train_df, train_targets,
                preProc = c("center", "scale"),
                verbose = TRUE,
                tuneLength = 20,
-               epochs = 50)
+               epochs = 100)
 
 preds <- predict(model, test_df)
 ```

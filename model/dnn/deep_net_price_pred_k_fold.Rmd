@@ -22,10 +22,8 @@ load(here("data","metric_pic_abs_final.Rda"))
 
 ```{r}
 #Choose data set
-```{r}
 data <- work
 #View(data[1:10,])
-```
 ```
 
 
@@ -135,9 +133,11 @@ build_base_model <- function() {
 ```{r}
 build_abs_model <- function() {
   network <- keras_model_sequential() %>% 
-    layer_dense(units = 64, activation = "sigmoid", input_shape = dim(train_data)[2]) %>% 
-    layer_dense(units = 64, activation = "sigmoid") %>% 
-    layer_dense(units = 1, sigmoid) 
+    layer_dense(units = 24, activation = "tanh", input_shape = dim(train_data)[2]) %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 12, activation = "tanh") %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 1) 
     
   network %>% compile(
     optimizer = "rmsprop", 
@@ -258,7 +258,7 @@ Train abs_model with suggested hp from caret:
 
 - the batchsize suggested by caret is very high. Try 500 one time
 ```{r kfold500, echo = T, results = 'hide', cache = T}
-num_epochs <- 100
+num_epochs <- 500
 all_mae_histories <- NULL  # an empty object to cumulatively store the model metrics
 
 for (i in 1:k) {
@@ -274,14 +274,14 @@ for (i in 1:k) {
   partial_train_targets <- train_targets[-val_indices]
   
   # Build the Keras model (already compiled)
-  model <- build_model()
+  model <- build_abs_model()
   
   # Train the model (in silent mode, verbose=0)
   history <- model %>% fit(partial_train_data, 
                            partial_train_targets,
                            validation_data = list(val_data, val_targets),
                            epochs = num_epochs, 
-                           batch_size = 100 , 
+                           batch_size = 100, 
                            verbose = 0
   )
   mae_history <- history$metrics$val_mae
@@ -316,14 +316,14 @@ Train model one last time with hyperparameters as defined above
 
 ```{r runZ, echo = F, results = 'hide', cache = T}
 # Get a fresh, compiled model.
-model <- build_model()
+model <- build_abs_model()
 
 # Train it on the entirety of the data.
 model %>% fit(train_data, 
               train_targets,
-              epochs = 100, 
+              epochs = 150, 
               batch_size = 100, 
-              verbose = 0)
+              verbose = 1)
 
 result <- model %>% evaluate(test_data, test_targets)
 ```
@@ -342,6 +342,10 @@ predictions_train <- model %>% predict(x = train_data)
 ```{r}
 rmse(test_targets, predictions_test)
 rmse(train_targets, predictions_train)
+```
+
+```{r}
+#model %>% save_model_tf("nn_abs")
 ```
 
 
