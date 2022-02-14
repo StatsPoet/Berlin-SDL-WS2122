@@ -9,6 +9,7 @@ library(lubridate)
 library(readr)
 library(here)
 library(caret)
+library(tidyselect)
 # Tobias
 library(reticulate)
 
@@ -18,7 +19,7 @@ options(scipen = 999)
 #----------------------- 
 # To Do:
 
-grand_listings <- read_csv(here("data","raw_data","listings.csv.gz"))
+grand_listings <- read_csv(here("data", "munich", "raw_data","listings.csv.gz"))
 
 # Grand Listings clean. The .gz one. "w" stands for work.  
 data <- grand_listings
@@ -31,9 +32,10 @@ data <- data[,names(sort(unlist(lapply(data, class)), decreasing = T))]
 
 #----------------- Missing. Goal: Keep as much info as possible. 
 # To Do:
-# Somehow the dates require different handling. Separate them. 
-dates <- data[,45:49]
-data <- data[, -c(45:49)]
+# Somehow the dates require different handling. Separate them.
+dates_id <- as.vector(which(sapply(data, is.Date)))
+dates <- data[,dates_id]
+data <- data[, -dates_id]
 
 # Remove different variations of NA. 
 # Rerun code for different NA variations if encountered. 
@@ -46,8 +48,8 @@ for (name in names(data)){
 #   data_s[, c(name)] <- na_if(data_s[, c(name)], "N/A")
 # }
 
-
 # Calculate the percentage of missings per variable. This is may indicator for dropping 
+# na_summary <- miss_var_summary(data)
 data <- bind_cols(data, dates) # Regroup dates into data
 sort(colMeans(is.na.data.frame(data)))
 
@@ -58,31 +60,26 @@ sort(colMeans(is.na.data.frame(data)))
 # data_s <- data[1:300,]
 # dates_s <- dates[1:300,]
 
-# Host liststings count is the same
+# Host listings count is the same
 all.equal(data$host_listings_count, data$host_total_listings_count)
 data[c("host_total_listings_count")] <- NULL
 
 # bathrooms and calendar_updated and licence: virtually absent. Drop them 
 data[c("bathrooms",
        "license",
-       "calendar_updated")] <- NULL
+       "calendar_updated", 
+       "neighbourhood_group_cleansed")] <- NULL
 
-# Neighbourhood variables: Dropt if neighbourhood dataset is more complete.
-# nbh <- read_csv("data/neighbourhoods.csv")
-# sort(colMeans(is.na.data.frame(nbh)))
 
-# Missing rate under 1% in separate dataset. 
-# Variables are not the same though. 
 # nbh has a cleansed version. 
-# nhb location could be used to rank kiezes somehow. Neural nets. 2much work.
-# Host nbh can be replaced with host location. Drop them. 
+# NA rate of other variables > 0.5
 data[c("neighbourhood",
        "neighborhood_overview",
        "host_neighbourhood")] <- NULL
 
-# Trustfullness variables:
+# Trustfulness variables:
 # higher trustfulness should lead to price increase but not so much. 
-# Create a dataset with them in it. 
+# Create a data set with them in it. 
 # Host_about, host_response_rate, host_acceptance_rate, host_response_time  NA rate > 0.5.
 data[c("host_about",
        "host_response_rate",
@@ -121,24 +118,20 @@ data <- data[,names(sort(unlist(lapply(data, class)), decreasing = T))]
 
 
 ## Separate dataset between facts, text and dates (again)
+dates_id <- as.vector(which(sapply(data, is.Date)))
+text_id <- as.vector(which(sapply(data, is.character)))
 
-time <- data[,42:46]
-text <- data[,47:62]
-mvars <- data[, -c(42:62)] # for metric_variables
+dates <- data[,dates_id]
+text <- data[, text_id]
+data <- data[, -c(dates_id, text_id)] # the metric variables. before M_vars
 
-# ## Export datasets.
-# write.csv(x=mvars, file="data/1_mvars.csv")
-# write.csv(x=text, file="data/2_text.csv")
-# write.csv(x=time, file="data/3_time.csv")
+#save(data, text, time,  file = here("data", "munich" "initial_cleaned_data.Rda"))
 
-# save(mvars, file="data/1_mvars.Rda")
-# save(text, file="data/2_text.Rda")
-# save(time, file="data/3_time.Rda")
 
 #Add images:
 #------------------------------------- 
 pd <- import("pandas") 
-bilder <- pd$read_pickle(here("data", "raw_data", "1_bilder"))
+bilder <- pd$read_pickle(here("data", "munich", "raw_data", "1_bilder"))
 #pic_id == id
 
 ## Load dataset

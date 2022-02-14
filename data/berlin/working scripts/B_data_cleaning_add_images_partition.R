@@ -1,4 +1,4 @@
-### Data Cleaning 
+### Data Cleaning Berlin
 # Sebastian
 library(dplyr)
 library(readr)
@@ -18,22 +18,23 @@ options(scipen = 999)
 #----------------------- 
 # To Do:
 
-grand_listings <- read_csv(here("data","raw_data","listings.csv.gz"))
+grand_listings_b <- read_csv(here("data","berlin", "raw_data","listings.csv.gz"))
 
 # Grand Listings clean. The .gz one. "w" stands for work.  
-data <- grand_listings
+data <- grand_listings_b
 
 # Save a list with variable names.
-names <- as.list(names(data))  
+names <- as.list(names(data_b))  
 
 # Sort variables to identify ratio>interval>ordinal>nominal to ease navigation
-data <- data[,names(sort(unlist(lapply(data, class)), decreasing = T))]
+data <- data_b[,names(sort(unlist(lapply(data, class)), decreasing = T))]
 
 #----------------- Missing. Goal: Keep as much info as possible. 
 # To Do:
 # Somehow the dates require different handling. Separate them. 
-dates <- data[,45:49]
-data <- data[, -c(45:49)]
+dates_id <- as.vector(which(sapply(data, is.Date)))
+dates <- data[,dates_id]
+data <- data[, -dates_id]
 
 # Remove different variations of NA. 
 # Rerun code for different NA variations if encountered. 
