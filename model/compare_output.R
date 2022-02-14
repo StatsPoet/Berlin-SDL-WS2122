@@ -8,7 +8,7 @@ library(here)
 library(dplyr)
 #library(ModelMetrics)
 
-options(scipen=999)
+options(scipen=0)
 
 # Load full data
 load(here("model", "models.Rda"))
@@ -49,8 +49,16 @@ for (i in 1:length(predictions)){
 names(performance) <- names(models)
 
 
-# I still need to write this function!!
+# I still need to write this loop!!
 
+
+
+coefficients <- data.frame(matrix())
+
+
+  perf = as.data.frame.matrix(coef(models[[i]]$finalModel, models[[i]]$finalModel$lambdaOpt))
+  data_3 <- cbind(data, new_col = vec)
+  
 # Export coefficients of final model trained on the whole data. 
 betas <- data.frame(
   l_bs = as.data.frame.matrix(coef(l_bs$finalModel, l_bs$finalModel$lambdaOpt)), 
