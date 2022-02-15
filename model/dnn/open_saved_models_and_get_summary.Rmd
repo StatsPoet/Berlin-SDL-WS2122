@@ -1,0 +1,25 @@
+---
+title: "open_saved_models_and_get_summary"
+author: "Tobias_R"
+date: "15 Februar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(keras)
+library(here)
+
+```
+
+```{r}
+model <- load_model_tf(here("model", "dnn", "nn_abs"))
+```
+
+```{r}
+summary(model)
+```
+
