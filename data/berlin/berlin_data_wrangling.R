@@ -51,7 +51,7 @@ for (name in names(data)){
 # Calculate the percentage of missings per variable. This is may indicator for dropping 
 data <- bind_cols(data, dates) # Regroup dates into data
 sort(colMeans(is.na.data.frame(data)))
-
+#View(sort(colMeans(is.na.data.frame(data))))
 #------------ Remove Variables 
 # To Do: 
 
@@ -67,10 +67,7 @@ data[c("host_total_listings_count")] <- NULL
 data[c("bathrooms",
        "license",
        "calendar_updated"
-       #,
-       #"neighbourhood_group_cleansed"
        )] <- NULL
-
 
 
 # nbh has a cleansed version. 
@@ -270,23 +267,20 @@ metric_pic  <- metric_pic[, -c(which(colnames(metric_pic) == "id"))]
 #------------------------------------------ Partitioning
 
 ## Global Data Partitioning
-# Description: Create an initial data partition to leave a final test set out, that's only going 
+# Description: Create an initial data partition to leave a final test set out, that's only going
 # to be used for the last fitting moment.
 
-# Note: initially, the partition process  took place here. 
-# Caret offers a more efficient way to streamline the process. 
-# Thus, train/validation partition is relegated to every single model for consistency, 
+# Note: initially, the partition process  took place here.
+# Caret offers a more efficient way to streamline the process.
+# Thus, train/validation partition is relegated to every single model for consistency,
 
-
-
-# create data with temperature
 #--------------- Full Data
 
 # Proportion 90:10
 rm(data, work, test, id)
 set.seed (69)
-id <- createDataPartition(metric_pic_temp$price, p = .9, 
-                          list = FALSE, 
+id <- createDataPartition(metric_pic_temp$price, p = .9,
+                          list = FALSE,
                           times = 1)
 work <- metric_pic_temp[id,]
 test <- metric_pic_temp[-id,]
@@ -294,16 +288,16 @@ test <- metric_pic_temp[-id,]
 nrow(work) + nrow(test)  == nrow(metric_pic_temp)
 
 # Save full
-save(work, file = here("data", "berlin", "metric_pic_temp.Rda"))
-save(test, file = here("data","berlin", "test_data_USE_LAST_USE_ONCE", "metric_pic_temp_test.Rda"))
+save(work, test, file = here("data", "berlin", "b_metric_pic_temp.Rda"))
+# save(test, file = here("data","berlin", "test_data_USE_LAST_USE_ONCE", "metric_pic_temp_test.Rda"))
 
 #------------------------- Dummies
 rm(data, work, test, id)
 
 # Proportion 90:10
 set.seed (69)
-id <- createDataPartition(metric_pic_dum_temp$price, p = .9, 
-                          list = FALSE, 
+id <- createDataPartition(metric_pic_dum_temp$price, p = .9,
+                          list = FALSE,
                           times = 1)
 work <- metric_pic_dum_temp[id,]
 test <- metric_pic_dum_temp[-id,]
@@ -313,16 +307,16 @@ nrow(work) + nrow(test)  == nrow(metric_pic_dum_temp)
 
 
 # Save full
-save(work, file = here("data","berlin",  "metric_pic_dum_temp.Rda"))
-save(test, file = here("data","berlin",  "test_data_USE_LAST_USE_ONCE", "metric_pic_dum_temp_test.Rda"))
+save(work, test, file = here("data","berlin",  "b_metric_pic_dum_temp.Rda"))
+#save(test, file = here("data","berlin",  "test_data_USE_LAST_USE_ONCE", "metric_pic_dum_temp_test.Rda"))
 
 #------------------------- Absolute frequencies
 rm(data, work, test, id)
 
 # Proportion 90:10
 set.seed (69)
-id <- createDataPartition(metric_pic_abs_temp$price, p = .9, 
-                          list = FALSE, 
+id <- createDataPartition(metric_pic_abs_temp$price, p = .9,
+                          list = FALSE,
                           times = 1)
 work <- metric_pic_abs_temp[id,]
 test <- metric_pic_abs_temp[-id,]
@@ -331,5 +325,5 @@ nrow(work) + nrow(test)  == nrow(metric_pic_abs_temp)
 
 
 # Save absolute frequencies data
-save(work,  file = here("data","berlin",  "metric_pic_abs_temp.Rda"))
-save(test, file = here("data","berlin",  "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_temp_test.Rda"))
+save(work, test,  file = here("data","berlin",  "b_metric_pic_abs_temp.Rda"))
+#save(test, file = here("data","berlin",  "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_temp_test.Rda"))

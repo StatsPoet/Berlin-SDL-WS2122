@@ -52,6 +52,7 @@ for (name in names(data)){
 # na_summary <- miss_var_summary(data)
 data <- bind_cols(data, dates) # Regroup dates into data
 sort(colMeans(is.na.data.frame(data)))
+# View(sort(colMeans(is.na.data.frame(data))))
 
 #------------ Remove Variables 
 # To Do: 
@@ -266,6 +267,13 @@ metric_pic_abs_temp  <- metric_pic_abs_temp[, -c(which(colnames(metric_pic_abs_t
 metric_pic  <- metric_pic[, -c(which(colnames(metric_pic) == "id"))]
 
 
+# I export the data already without partitioning because Munich is the true test set.
+# If partition is needed, 
+
+save(metric_pic_temp, file = here("data", "munich", "m_metric_pic_temp.Rda"))
+save(metric_pic_dum_temp, file = here("data", "munich", "m_metric_pic_dum_temp.Rda"))
+save(metric_pic_abs_temp, file = here("data", "munich", "m_metric_pic_abs_temp.Rda"))
+
 #View(metric_pic_temp[1:10,])
 #View(metric_pic_dum_temp[1:10,])
 #View(metric_pic_abs_temp[1:10,])
@@ -279,61 +287,58 @@ metric_pic  <- metric_pic[, -c(which(colnames(metric_pic) == "id"))]
 # Caret offers a more efficient way to streamline the process. 
 # Thus, train/validation partition is relegated to every single model for consistency, 
 
-
-
-# create data with temperature
-#--------------- Full Data
-
-# Proportion 90:10
-rm(data, work, test, id)
-set.seed (69)
-id <- createDataPartition(metric_pic_temp$price, p = .9, 
-                          list = FALSE, 
-                          times = 1)
-work <- metric_pic_temp[id,]
-test <- metric_pic_temp[-id,]
-# Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_temp)
-
-# Save full
-save(work, file = here("data", "munich", "metric_pic_temp.Rda"))
-save(test, file = here("data","munich", "test_data_USE_LAST_USE_ONCE", "metric_pic_temp_test.Rda"))
-
-#------------------------- Dummies
-rm(data, work, test, id)
-
-# Proportion 90:10
-set.seed (69)
-id <- createDataPartition(metric_pic_dum_temp$price, p = .9, 
-                          list = FALSE, 
-                          times = 1)
-work <- metric_pic_dum_temp[id,]
-test <- metric_pic_dum_temp[-id,]
-
-# Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_dum_temp)
-
-
-# Save full
-save(work, file = here("data","munich",  "metric_pic_dum_temp.Rda"))
-save(test, file = here("data","munich",  "test_data_USE_LAST_USE_ONCE", "metric_pic_dum_temp_test.Rda"))
-
-#------------------------- Absolute frequencies
-rm(data, work, test, id)
-
-# Proportion 90:10
-set.seed (69)
-id <- createDataPartition(metric_pic_abs_temp$price, p = .9, 
-                          list = FALSE, 
-                          times = 1)
-work <- metric_pic_abs_temp[id,]
-test <- metric_pic_abs_temp[-id,]
-# Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_abs_temp)
-
-
-# Save absolute frequencies data
-save(work,  file = here("data","munich",  "metric_pic_abs_temp.Rda"))
-save(test, file = here("data","munich",  "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_temp_test.Rda"))
-
+# #--------------- Full Data
+# 
+# # Proportion 90:10
+# rm(data, work, test, id)
+# set.seed (69)
+# id <- createDataPartition(metric_pic_temp$price, p = .9, 
+#                           list = FALSE, 
+#                           times = 1)
+# work <- metric_pic_temp[id,]
+# test <- metric_pic_temp[-id,]
+# # Inspection
+# nrow(work) + nrow(test)  == nrow(metric_pic_temp)
+# 
+# # Save full
+# save(work, file = here("data", "munich", "metric_pic_temp.Rda"))
+# save(test, file = here("data","munich", "test_data_USE_LAST_USE_ONCE", "metric_pic_temp_test.Rda"))
+# 
+# #------------------------- Dummies
+# rm(data, work, test, id)
+# 
+# # Proportion 90:10
+# set.seed (69)
+# id <- createDataPartition(metric_pic_dum_temp$price, p = .9, 
+#                           list = FALSE, 
+#                           times = 1)
+# work <- metric_pic_dum_temp[id,]
+# test <- metric_pic_dum_temp[-id,]
+# 
+# # Inspection
+# nrow(work) + nrow(test)  == nrow(metric_pic_dum_temp)
+# 
+# 
+# # Save full
+# save(work, file = here("data","munich",  "metric_pic_dum_temp.Rda"))
+# save(test, file = here("data","munich",  "test_data_USE_LAST_USE_ONCE", "metric_pic_dum_temp_test.Rda"))
+# 
+# #------------------------- Absolute frequencies
+# rm(data, work, test, id)
+# 
+# # Proportion 90:10
+# set.seed (69)
+# id <- createDataPartition(metric_pic_abs_temp$price, p = .9, 
+#                           list = FALSE, 
+#                           times = 1)
+# work <- metric_pic_abs_temp[id,]
+# test <- metric_pic_abs_temp[-id,]
+# # Inspection
+# nrow(work) + nrow(test)  == nrow(metric_pic_abs_temp)
+# 
+# 
+# # Save absolute frequencies data
+# save(work,  file = here("data","munich",  "metric_pic_abs_temp.Rda"))
+# save(test, file = here("data","munich",  "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_temp_test.Rda"))
+# 
 
