@@ -68,7 +68,8 @@ data[c("host_total_listings_count")] <- NULL
 data[c("bathrooms",
        "license",
        "calendar_updated", 
-       "neighbourhood_group_cleansed")] <- NULL
+       "neighbourhood_group_cleansed"
+       )] <- NULL
 
 
 # nbh has a cleansed version. 
@@ -123,7 +124,7 @@ text_id <- as.vector(which(sapply(data, is.character)))
 
 dates <- data[,dates_id]
 text <- data[, text_id]
-data <- data[, -c(dates_id, text_id)] # the metric variables. before M_vars
+mvars <- data[, -c(dates_id, text_id)] # the metric variables. before M_vars
 
 #save(data, text, time,  file = here("data", "munich" "initial_cleaned_data.Rda"))
 
@@ -131,7 +132,7 @@ data <- data[, -c(dates_id, text_id)] # the metric variables. before M_vars
 #Add images:
 #------------------------------------- 
 pd <- import("pandas") 
-bilder <- pd$read_pickle(here("data", "munich", "raw_data", "1_bilder"))
+bilder <- pd$read_pickle(here("data", "munich", "raw_data", "1_bilder_m"))
 #pic_id == id
 
 ## Load dataset
@@ -225,7 +226,7 @@ metric_pic_dum <- subset(x = metric_pic_dum, select = -c(brightness_mean))
 # Add Temperature:
 #------------
 
-temperature <- pd$read_pickle(here("data", "raw_data", "2_temperature"))
+temperature <- pd$read_pickle(here("data", "munich", "raw_data", "2_cct_m"))
 
 #there are some values (707) which are very large for some reason. They need to be removed. 
 temperature <- temperature[-c(which(temperature$cct_mean > 100000)), ]
@@ -250,24 +251,24 @@ temp_mean <- temperature[c("pic_id", "cct_mean")]
 # make one df with only the values for each picture
 temp_pics <- subset(x = temperature, select = -c(cct_mean))
 
-metric_pic_final <- merge(metric_pic, temperature, by.x = "id", by.y = "pic_id")
+metric_pic_temp <- merge(metric_pic, temperature, by.x = "id", by.y = "pic_id")
 
-metric_pic_dum_final <- merge(metric_pic_dum, temp_pics, by.x = "id", by.y = "pic_id")
+metric_pic_dum_temp <- merge(metric_pic_dum, temp_pics, by.x = "id", by.y = "pic_id")
 
-metric_pic_abs_final <- merge(metric_pic_abs, temp_mean, by.x = "id", by.y = "pic_id")
+metric_pic_abs_temp <- merge(metric_pic_abs, temp_mean, by.x = "id", by.y = "pic_id")
 
 # # leave out id etc
 
-metric_pic_final  <- metric_pic_final[, -c(which(colnames(metric_pic_final) == "id"))]
-metric_pic_dum_final  <- metric_pic_dum_final[, -c(which(colnames(metric_pic_dum_final) == "id"))]
-metric_pic_abs_final  <- metric_pic_abs_final[, -c(which(colnames(metric_pic_abs_final) == "id"))]
+metric_pic_temp  <- metric_pic_temp[, -c(which(colnames(metric_pic_temp) == "id"))]
+metric_pic_dum_temp  <- metric_pic_dum_temp[, -c(which(colnames(metric_pic_dum_temp) == "id"))]
+metric_pic_abs_temp  <- metric_pic_abs_temp[, -c(which(colnames(metric_pic_abs_temp) == "id"))]
 
 metric_pic  <- metric_pic[, -c(which(colnames(metric_pic) == "id"))]
 
 
-#View(metric_pic_final[1:10,])
-#View(metric_pic_dum_final[1:10,])
-#View(metric_pic_abs_final[1:10,])
+#View(metric_pic_temp[1:10,])
+#View(metric_pic_dum_temp[1:10,])
+#View(metric_pic_abs_temp[1:10,])
 #------------------------------------------ Partitioning
 
 ## Global Data Partitioning
@@ -280,116 +281,59 @@ metric_pic  <- metric_pic[, -c(which(colnames(metric_pic) == "id"))]
 
 
 
-# create data missing temperature
-#--------------- Full Data
-
-# Proportion 90:10
-rm(data, work, test, id)
-set.seed (69)
-id <- createDataPartition(metric_pic$price, p = .9, 
-                          list = FALSE, 
-                          times = 1)
-work <- metric_pic[id,]
-test <- metric_pic[-id,]
-# Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic)
-
-# Save full
-save(work, file = here("data", "metric_pic.Rda"))
-save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_test.Rda"))
-
-#------------------------- Dummies
-rm(data, work, test, id)
-
-# Proportion 90:10
-set.seed (69)
-id <- createDataPartition(metric_pic_dum$price, p = .9, 
-                          list = FALSE, 
-                          times = 1)
-work <- metric_pic_dum[id,]
-test <- metric_pic_dum[-id,]
-
-# Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_dum)
-
-
-# Save full
-save(work, file = here("data", "metric_pic_dum.Rda"))
-save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_dum_test.Rda"))
-
-#------------------------- Absolute frequencies
-rm(data, work, test, id)
-
-# Proportion 90:10
-set.seed (69)
-id <- createDataPartition(metric_pic_abs$price, p = .9, 
-                          list = FALSE, 
-                          times = 1)
-work <- metric_pic_abs[id,]
-test <- metric_pic_abs[-id,]
-# Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_abs)
-
-
-# Save absolute frequencies data
-save(work,  file = here("data", "metric_pic_abs.Rda"))
-save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_test.Rda"))
-
-
-
-
-
 # create data with temperature
 #--------------- Full Data
 
 # Proportion 90:10
 rm(data, work, test, id)
 set.seed (69)
-id <- createDataPartition(metric_pic_final$price, p = .9, 
+id <- createDataPartition(metric_pic_temp$price, p = .9, 
                           list = FALSE, 
                           times = 1)
-work <- metric_pic_final[id,]
-test <- metric_pic_final[-id,]
+work <- metric_pic_temp[id,]
+test <- metric_pic_temp[-id,]
 # Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_final)
+nrow(work) + nrow(test)  == nrow(metric_pic_temp)
 
 # Save full
-save(work, file = here("data", "metric_pic_final.Rda"))
-save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_final_test.Rda"))
+save(work, file = here("data", "munich", "metric_pic_temp.Rda"))
+save(test, file = here("data","munich", "test_data_USE_LAST_USE_ONCE", "metric_pic_temp_test.Rda"))
 
 #------------------------- Dummies
 rm(data, work, test, id)
 
 # Proportion 90:10
 set.seed (69)
-id <- createDataPartition(metric_pic_dum_final$price, p = .9, 
+id <- createDataPartition(metric_pic_dum_temp$price, p = .9, 
                           list = FALSE, 
                           times = 1)
-work <- metric_pic_dum_final[id,]
-test <- metric_pic_dum_final[-id,]
+work <- metric_pic_dum_temp[id,]
+test <- metric_pic_dum_temp[-id,]
 
 # Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_dum_final)
+nrow(work) + nrow(test)  == nrow(metric_pic_dum_temp)
 
 
 # Save full
-save(work, file = here("data", "metric_pic_dum_final.Rda"))
-save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_dum_final_test.Rda"))
+save(work, file = here("data","munich",  "metric_pic_dum_temp.Rda"))
+save(test, file = here("data","munich",  "test_data_USE_LAST_USE_ONCE", "metric_pic_dum_temp_test.Rda"))
 
 #------------------------- Absolute frequencies
 rm(data, work, test, id)
 
 # Proportion 90:10
 set.seed (69)
-id <- createDataPartition(metric_pic_abs_final$price, p = .9, 
+id <- createDataPartition(metric_pic_abs_temp$price, p = .9, 
                           list = FALSE, 
                           times = 1)
-work <- metric_pic_abs_final[id,]
-test <- metric_pic_abs_final[-id,]
+work <- metric_pic_abs_temp[id,]
+test <- metric_pic_abs_temp[-id,]
 # Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_abs_final)
+nrow(work) + nrow(test)  == nrow(metric_pic_abs_temp)
 
 
 # Save absolute frequencies data
-save(work,  file = here("data", "metric_pic_abs_final.Rda"))
-save(test, file = here("data", "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_final_test.Rda"))
+save(work,  file = here("data","munich",  "metric_pic_abs_temp.Rda"))
+save(test, file = here("data","munich",  "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_temp_test.Rda"))
+
+
