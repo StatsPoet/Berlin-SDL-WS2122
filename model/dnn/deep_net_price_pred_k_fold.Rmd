@@ -321,7 +321,7 @@ model <- build_abs_model()
 # Train it on the entirety of the data.
 model %>% fit(train_data, 
               train_targets,
-              epochs = 150, 
+              epochs = 180, 
               batch_size = 100, 
               verbose = 1)
 
@@ -331,6 +331,15 @@ result <- model %>% evaluate(test_data, test_targets)
 ```{r resultsZ}
 result
 ```
+
+```{r}
+#model %>% save_model_tf("nn_abs")
+```
+
+```{r}
+model <- load_model_tf("nn_abs")
+```
+
 
 # Predict and calc rmse
 ```{r}
@@ -344,8 +353,6 @@ rmse(test_targets, predictions_test)
 rmse(train_targets, predictions_train)
 ```
 
-```{r}
-#model %>% save_model_tf("nn_abs")
-```
+
 
 
