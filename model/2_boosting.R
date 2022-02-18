@@ -1,8 +1,8 @@
 #------ Boosting with Caret nach ISLR
-library(glmnet)
 library(caret)
 library(here)
 library(dplyr)
+library(gbm)
 options(scipen=999)
 
 # Load full data
@@ -41,37 +41,39 @@ y <- data$price
 #     A model-specific variable importance metric is available.
 
 
+#  Cross Validation for controlling:
+
+ctrl_cv <- trainControl(## 10-fold CV
+  method = "repeatedcv",
+  number = 10,
+  ## repeated ten times
+  repeats = 10)
 
 # Set the grid of parameters to be optimized
-grid_gbm <- expand.grid(interaction.depth = 1:2,
-                        shrinkage = c(0.001, 0.1, 0.2),
-                        n.trees = c(100, 5000),
-                        #n.minobsinnode = 10)
-)
+set.seed(69)
+gbm_grid <- expand.grid(interaction.depth = 1,
+                        shrinkage = seq(0.001, 0.202, 0.04),
+                        n.trees = c(100,1000,5000),
+                        n.minobsinnode = 10)
 
-
-# Set the control grid for setting for Out of Bag observations and no method for reference. 
-ctrl_obb <- trainControl(method = "oob")
-
-
-
+# Boost
 set.seed(69)
 boost <- train(x_tr,
                y_tr,
                trControl = ctrl_cv,
                method = "gbm",
-               tuneGrid = rf_grid,
-               metric = "RMSE", 
+               tuneGrid = gbm_grid,
+               metric = "RMSE",
                #preProc = c("center", "scale"),
                distribution = "gaussian")
 
-
+# Boost with preprocesing. 
 set.seed(69)
 boost_centered <- train(x_tr,
                         y_tr,
                         trControl = ctrl_cv,
                         method = "gbm",
-                        tuneGrid = rf_grid,
+                        tuneGrid = gbm_grid,
                         metric = "RMSE", 
                         preProc = c("center", "scale"),
                         distribution = "gaussian")
