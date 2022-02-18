@@ -1,18 +1,33 @@
-#------ Lasso with Caret 
-# Dependencies 
-# install.packages("glmnet")
-# install.packages("ISLR2")
+## Compare Outputs
 library(glmnet)
 library(caret)
 library(here)
 library(dplyr)
 #library(ModelMetrics)
-
 options(scipen=0)
 
+
+
 # Load full data
-load(here("model", "models.Rda"))
-load(here("data", "metric_pic_abs.Rda"))
+load(here("model", "ols_lasso.Rda"))
+load(here("model", "boosting.Rda"))
+load(here("model", "rf.Rda"))
+load(here("data", "berlin", "b_metric_pic_abs_temp.Rda"))
+data <- metric_pic_abs_temp
+rm(metric_pic_abs_temp)
+
+# Train data
+x_tr <- model.matrix(price ~ ., train)[,-1] # x_tr stands for training
+y_tr <- train$price
+
+# Validation data
+x_tst<-  model.matrix(price ~ ., test)[,-1] # x_tst stands for validation
+y_tst<- test$price
+
+# Full data
+x <-  model.matrix(price ~ ., data)[,-1] # combined data set of train and valid.
+y <- data$price
+
 
 # Model Predictions
 #-----------------------------------------------
