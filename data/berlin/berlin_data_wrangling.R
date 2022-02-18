@@ -20,7 +20,7 @@ options(scipen = 999)
 
 grand_listings <- read_csv(here("data","berlin", "raw_data","listings.csv.gz"))
 
-# Grand Listings clean. The .gz one. "w" stands for work.  
+# Grand Listings clean. The .gz one.  
 data <- grand_listings
 
 # Save a list with variable names.
@@ -277,53 +277,53 @@ metric_pic  <- metric_pic[, -c(which(colnames(metric_pic) == "id"))]
 #--------------- Full Data
 
 # Proportion 90:10
-rm(data, work, test, id)
+rm(data, train, test, id)
 set.seed (69)
 id <- createDataPartition(metric_pic_temp$price, p = .9,
                           list = FALSE,
                           times = 1)
-work <- metric_pic_temp[id,]
+train <- metric_pic_temp[id,]
 test <- metric_pic_temp[-id,]
 # Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_temp)
+nrow(train) + nrow(test)  == nrow(metric_pic_temp)
 
 # Save full
-save(work, test, file = here("data", "berlin", "b_metric_pic_temp.Rda"))
+save(metric_pic_temp, train, test, file = here("data", "berlin", "b_metric_pic_temp.Rda"))
 # save(test, file = here("data","berlin", "test_data_USE_LAST_USE_ONCE", "metric_pic_temp_test.Rda"))
 
 #------------------------- Dummies
-rm(data, work, test, id)
+rm(data, train, test, id)
 
 # Proportion 90:10
 set.seed (69)
 id <- createDataPartition(metric_pic_dum_temp$price, p = .9,
                           list = FALSE,
                           times = 1)
-work <- metric_pic_dum_temp[id,]
+train <- metric_pic_dum_temp[id,]
 test <- metric_pic_dum_temp[-id,]
 
 # Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_dum_temp)
+nrow(train) + nrow(test)  == nrow(metric_pic_dum_temp)
 
 
 # Save full
-save(work, test, file = here("data","berlin",  "b_metric_pic_dum_temp.Rda"))
+save(metric_pic_dum_temp, train, test, file = here("data","berlin",  "b_metric_pic_dum_temp.Rda"))
 #save(test, file = here("data","berlin",  "test_data_USE_LAST_USE_ONCE", "metric_pic_dum_temp_test.Rda"))
 
 #------------------------- Absolute frequencies
-rm(data, work, test, id)
+rm(data, train, test, id)
 
 # Proportion 90:10
 set.seed (69)
 id <- createDataPartition(metric_pic_abs_temp$price, p = .9,
                           list = FALSE,
                           times = 1)
-work <- metric_pic_abs_temp[id,]
+train <- metric_pic_abs_temp[id,]
 test <- metric_pic_abs_temp[-id,]
 # Inspection
-nrow(work) + nrow(test)  == nrow(metric_pic_abs_temp)
+nrow(train) + nrow(test)  == nrow(metric_pic_abs_temp)
 
 
 # Save absolute frequencies data
-save(work, test,  file = here("data","berlin",  "b_metric_pic_abs_temp.Rda"))
+save(metric_pic_abs_temp, train, test,  file = here("data","berlin",  "b_metric_pic_abs_temp.Rda"))
 #save(test, file = here("data","berlin",  "test_data_USE_LAST_USE_ONCE", "metric_pic_abs_temp_test.Rda"))

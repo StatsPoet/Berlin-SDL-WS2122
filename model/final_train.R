@@ -62,3 +62,32 @@ betas
 performance
 
 
+
+# Final Models i.e models fitted in the whole dataset. from the other script. 
+# --------------------
+# Lasso BS
+set.seed(69)
+fit_final <- trainControl(method = "none")
+l_bs_final <- train(
+  x,
+  y,
+  method = "glmnet",
+  tuneGrid = data.frame(alpha = 1,
+                        lambda = l_bs$finalModel$lambdaOpt),
+  trControl = fit_final
+  
+)
+
+
+# Lasso CV
+set.seed(69)
+fit_final <- trainControl(method = "none")
+l_cv_final <- train(
+  x,
+  y,
+  method = "glmnet",
+  tuneGrid = data.frame(alpha = 1,
+                        lambda = l_cv$finalModel$lambdaOpt),
+  trControl = fit_final
+  
+)
