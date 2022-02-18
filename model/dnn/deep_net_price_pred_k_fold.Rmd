@@ -17,12 +17,12 @@ library(here)
 # load in data created by add_image_anaylsis_df
 ```{r}
 # load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
-load(here("data","berlin", "metric_pic_abs_final.Rda"))
+load(here("data","berlin", "b_metric_pic_abs_temp.Rda"))
 ```
 
 ```{r}
 #Choose data set
-data <- work
+data <- metric_pic_abs_temp
 #View(data[1:10,])
 ```
 
@@ -258,7 +258,7 @@ Train abs_model with suggested hp from caret:
 
 - the batchsize suggested by caret is very high. Try 500 one time
 ```{r kfold500, echo = T, results = 'hide', cache = T}
-num_epochs <- 500
+num_epochs <- 250
 all_mae_histories <- NULL  # an empty object to cumulatively store the model metrics
 
 for (i in 1:k) {
@@ -321,7 +321,7 @@ model <- build_abs_model()
 # Train it on the entirety of the data.
 model %>% fit(train_data, 
               train_targets,
-              epochs = 180, 
+              epochs = 142, 
               batch_size = 100, 
               verbose = 1)
 
@@ -333,11 +333,11 @@ result
 ```
 
 ```{r}
-#model %>% save_model_tf("nn_abs")
+model %>% save_model_tf("nn_abs_new")
 ```
 
 ```{r}
-model <- load_model_tf("nn_abs")
+model <- load_model_tf("nn_abs_new")
 ```
 
 

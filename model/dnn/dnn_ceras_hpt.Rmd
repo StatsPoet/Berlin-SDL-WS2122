@@ -17,7 +17,7 @@ library(Metrics)
 # load in data created by add_image_anaylsis_df
 ```{r}
 # load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
-load(here("data","metric_pic_abs_final.Rda"))
+load(here("data","b_metric_pic_abs_final.Rda"))
 ```
 
 #Choose data set
