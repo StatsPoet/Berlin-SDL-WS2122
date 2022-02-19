@@ -53,7 +53,7 @@ ctrl_cv <- trainControl(## 10-fold CV
 set.seed(69)
 gbm_grid <- expand.grid(interaction.depth = 1,
                         shrinkage = seq(0.001, 0.202, 0.04),
-                        n.trees = c(100,1000,5000),
+                        n.trees = c(5000),
                         n.minobsinnode = 10)
 
 # Boost
@@ -80,6 +80,8 @@ boost_centered <- train(x_tr,
 
 
 #------------------- Export models 
-boost_models <- list(boost, boost_centered)
-names(boost_models) <- c("Boost", "Boost Centered")
-save(boost_models,  file = here("model", "boost.Rda"))
+boost_models <- list(boost)
+                     #, boost_centered)
+names(boost_models) <- c("Boost")
+                         #,"Boost Centered")
+save(boost_models, boost,  file = here("model", "boost.Rda"))

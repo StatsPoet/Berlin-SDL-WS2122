@@ -6,11 +6,23 @@ library(dplyr)
 #library(ModelMetrics)
 options(scipen=0)
 
+# Load dnn
+model <- load_model_tf("nn_abs_new")
+
+
+# Predict dnn
+predictions_test <- model %>% predict(x = test_data)
+predictions_train <- model %>% predict(x = train_data)
+
+# Calculate RMSE
+rmse(test_targets, predictions_test)
+rmse(train_targets, predictions_train)
+
 
 
 # Load full data
 load(here("model", "ols_lasso.Rda"))
-load(here("model", "boosting.Rda"))
+load(here("model", "boost.Rda"))
 load(here("model", "rf.Rda"))
 load(here("data", "berlin", "b_metric_pic_abs_temp.Rda"))
 data <- metric_pic_abs_temp

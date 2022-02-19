@@ -6,12 +6,7 @@ library(here)
 library(dplyr)
 library(e1071)
 library(ranger)
-
-#------ Lasso with Caret 
-library(glmnet)
-library(caret)
 library(here)
-library(dplyr)
 options(scipen=999)
 
 # Load full data
@@ -55,21 +50,19 @@ p_3 <- round(p/3)
 
 set.seed(69)
 rf_grid <- expand.grid(
-  .mtry = seq(p_3-5, p_3 + 5),
+  .mtry = c(-7 + p_3, p_3,  7 + p_3),
   .splitrule = "variance",
-  .min.node.size = c(5,10,15)
+  .min.node.size = c(5)
 )
+
+ctrl_cv <- trainControl(## 10-fold CV
+  method = "repeatedcv",
+  number = 10,
+  ## repeated ten times
+  repeats = 10)
 
 #Only these three are supported by caret and not the number of trees. 
 #In train you can specify num.trees and importance:
-set.seed(69)
-rf_nometric <- train(x_tr,
-                     y_tr,
-                     method = "ranger",
-                     trControl = ctrl_cv,
-                     tuneGrid = rf_grid 
-                     #metric = "RMSE"
-)
 
 set.seed(69)
 rf <- train(x_tr,
@@ -84,12 +77,12 @@ rf_centered <- train(x_tr,
                      y_tr,
                      trControl = ctrl_cv,
                      method = "ranger",
-                     tuneGrid = rf_grid, 
+                     tuneGrid = rf_grid,
                      metric = "RMSE",
                      preProc = c("center", "scale"))
 
 
 #------------------- Export models 
-rf_models <- list(rf, rf_centered)
-names(rf_models) <- c("RF", "RF Centered")
-save(rf_models,  file = here("model", "rf.Rda"))
+rf_models_mtry21 <- list(rf, rf_centered)
+names(rf_models_mtry21) <- c("RF_21","RF_21 Centered")
+save(rf_models_mtry21,  file = here("model", "rf_mtry21.Rda"))
