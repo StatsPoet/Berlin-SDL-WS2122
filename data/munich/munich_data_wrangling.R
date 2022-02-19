@@ -198,7 +198,7 @@ sum(unlist(truth_num)) == dim(metric_pic)[2]
 # being the first dummy and "Washing_machine_pic_9" the last. 
 metric_pic_abs  <-
   metric_pic[, -c(
-    which(colnames(metric_pic) == "Bathroom_cabinet_pic_0"):which(colnames(metric_pic) == "Washing_machine_pic_9")
+    which(colnames(metric_pic) == "Alarm_clock_pic_0"):which(colnames(metric_pic) == "Washing_machine_pic_9")
   )]
 
 metric_pic_abs  <-

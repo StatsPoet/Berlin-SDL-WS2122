@@ -14,33 +14,42 @@ library(keras)
 library(here)
 ```
 
-# load in data created by add_image_anaylsis_df
+# load in data 
 ```{r}
-# load("C:/Users/tobir/OneDrive/Dokumente/R/WS_21_22/DeepL/Berlin-SDL-WS2122/data/image_an_mvars_df.Rda")
-load(here("data","berlin", "b_metric_pic_abs_temp.Rda"))
+load(here("data","munich", "m_metric_pic_abs_temp.Rda"))
 ```
 
 ```{r}
-#Choose data set
-data <- metric_pic_abs_temp
-#View(data[1:10,])
+metric_pic_abs_temp <- subset(x = metric_pic_abs_temp, select = -c(Alarm_clock_pic_0))
+```
+
+
+```{r}
+full_mun <- metric_pic_abs_temp
+mun_targets <- log(full_mun["price"])
+mun_targets <- unlist(c(mun_targets))
+mun_data <- subset(x = full_mun, select = -c(price))
+mun_data <- array(mun_data)
+
+mean <- colMeans(mun_data) # mean of each column
+std <- apply(mun_data, 2, sd) # stdev of each column
+mun_data <- scale(mun_data, center = mean, scale = std)
+```
+
+```{r}
+load(here("data","berlin", "b_metric_pic_abs_temp.Rda"))
+```
+
+
+```{r}
+full_data <- metric_pic_abs_temp
+train_data <- train
+test_data <- test
 ```
 
 
 ## split dataset into training and test set.
 Because k-fold cross-validation is used, there is no need for a validation set
-
-```{r}
-## 85% of the sample size
-smp_size <- floor(0.85 * nrow(data))
-
-## set the seed to make your partition reproducible
-set.seed(123)
-train_ind <- sample(seq_len(nrow(data)), size = smp_size)
-
-train_data <- data[train_ind, ]
-test_data <- data[-train_ind, ]
-```
 
 ```{r}
 View(test_data[0:10,])
@@ -51,20 +60,25 @@ View(test_data[0:10,])
 ```{r}
 train_targets <- log(train_data["price"]) #vary later to see if val_mae changes
 test_targets <- log(test_data["price"]) #vary later to see if val_mae changes
+full_targets <- log(full_data["price"])
 
 #train_targets <- train_data["price"] #no log
 #test_targets <- test_data["price"] # no log
 
 train_data <- subset(x = train_data, select = -c(price))
 test_data <- subset(x = test_data, select = -c(price))
+full_data <- subset(x = full_data, select = -c(price))
+
 ```
 
 ## transform data to matrix, so that keras can work with it
 ```{r}
 train_targets <- unlist(c(train_targets))
 test_targets <- unlist(c(test_targets))
+full_targets <- unlist(c(full_targets))
 train_data <- array(train_data)
 test_data <- array(test_data)
+full_data <- array(full_data)
 ```
 
 
@@ -78,7 +92,9 @@ std <- apply(train_data, 2, sd) # stdev of each column
 # Calculate feature-wise (within-variable) z-scores: (x - mean)/std
 train_data <- scale(train_data, center = mean, scale = std)
 test_data <- scale(test_data, center = mean, scale = std)
+full_data <- scale(full_data, center = mean, scale = std)
 ```
+
 
 ```{r}
 View(train_data[1:10,])
@@ -228,7 +244,7 @@ for (i in 1:1) {
   network %>% fit(partial_train_data,
                   partial_train_targets,
                   epochs = num_epochs,
-                  batch_size = 500,
+                  batch_size = 250,
                   verbose = 0)
                 
   # Evaluate the model on the validation data
@@ -300,10 +316,10 @@ average_mae_history <- data.frame(
 p <- ggplot(average_mae_history, aes(x = epoch, y = validation_mae))
 
 p + 
-  geom_point()
+  geom_point(size = 0.01)
 
 p + 
-  geom_smooth(method = 'loess', se = FALSE)
+  geom_smooth(e = FALSE)
 ```
 #Find the lowest value
 ```{r}
@@ -319,9 +335,9 @@ Train model one last time with hyperparameters as defined above
 model <- build_abs_model()
 
 # Train it on the entirety of the data.
-model %>% fit(train_data, 
-              train_targets,
-              epochs = 142, 
+model %>% fit(full_data, 
+              full_targets,
+              epochs = 125, 
               batch_size = 100, 
               verbose = 1)
 
@@ -333,11 +349,11 @@ result
 ```
 
 ```{r}
-model %>% save_model_tf("nn_abs_new")
+#model %>% save_model_tf("nn_abs_full")
 ```
 
 ```{r}
-model <- load_model_tf("nn_abs_new")
+model <- load_model_tf("nn_abs_full")
 ```
 
 
@@ -353,6 +369,9 @@ rmse(test_targets, predictions_test)
 rmse(train_targets, predictions_train)
 ```
 
-
+```{r}
+predictions_mun <- model %>% predict(x = mun_data)
+rmse(mun_targets, predictions_mun)
+```
 
 
