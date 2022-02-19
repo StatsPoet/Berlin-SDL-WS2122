@@ -49,9 +49,6 @@ qr(x_tst)$rank == ncol(data)-1
 
 # Train Models
 #---------------------------------------
-
-
-
 # OLS for reference
 set.seed(69)
 ols <- train(
@@ -59,6 +56,7 @@ ols <- train(
   y_tr,
   method = "lm",
 )
+
 
 #--------------------------- Lasso
 # glmnet
@@ -110,11 +108,84 @@ lasso_centered <- train(
   trControl = ctrl_cv
 )
 
+# Centered with log price
+set.seed(69)
+lasso_c_log <- train(
+  x_tr,
+  log(y_tr),
+  method = "glmnet",
+  tuneGrid = expand.grid(alpha = 1, lambda = grid_lasso),
+  preProc = c("center", "scale"),
+  trControl = ctrl_cv
+)
+
+
+
+
 #------------------- Export models 
-ols_lasso <- list(ols, lasso, lasso_centered)
+ols_lasso <- list(ols, lasso, lasso_centered, lasso_c_log)
 names(ols_lasso) <- c("OLS", 
                    "Lasso",
-                   "Lasso Centered")
+                   "Lasso Standard", 
+                   "Lasso S + log(price)")
 save(ols_lasso,  file = here("model", "ols_lasso.Rda"))
 
+#-------------Last fit with best parameters. 
 
+# Best Hyperparameters
+best_hp <- list()
+for (i in 1:length(ols_lasso)) {
+  bhp <- ols_lasso[[i]]$bestTune
+  best_hp[[length(best_hp) + 1]] <- bhp
+}
+best_hp
+
+#----------------------------------------------------------------------- Final Train
+ctrl_ff <- trainControl(method = "none")
+
+
+# Model Fit:
+
+# OLS for reference
+f_ols <- train(
+  x,
+  y,
+  method = "lm",
+)
+
+f_lasso <- train(
+  x,
+  y,
+  method = "glmnet",
+  tuneGrid = expand.grid(alpha = 1, lambda = ols_lasso$Lasso$bestTune$lambda),
+  trControl = ctrl_ff
+)
+
+# Centered 
+f_lasso_c <- train(
+  x,
+  y,
+  method = "glmnet",
+  tuneGrid = expand.grid(alpha = 1, lambda = ols_lasso$`Lasso Standard`$bestTune$lambda),
+  preProc = c("center", "scale"),
+  trControl = ctrl_ff
+)
+
+# Centered with log price
+f_lasso_c_log <- train(
+  x,
+  log(y),
+  method = "glmnet",
+  tuneGrid = expand.grid(alpha = 1, lambda = ols_lasso$`Lasso S + log(price)`$bestTune$lambda),
+  preProc = c("center", "scale"),
+  trControl = ctrl_ff
+)
+
+
+ols_lasso_best <- list(f_ols, f_lasso, f_lasso_c, f_lasso_c_log)
+names(ols_lasso_best) <- c("OLS-f", 
+                            "Lasso-f",
+                            "Lasso S-f", 
+                            "Lasso S_log(price)-f")
+
+save(ols_lasso_best,  file = here("model", "ols_lasso_best.Rda"))

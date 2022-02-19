@@ -27,3 +27,26 @@ l_bs <- train(
 ols_r <- lm(price ~ ., train)
 out_ols_r <- summary(ols_r)
 
+
+# I still need to write this loop!!
+
+
+
+coefficients <- data.frame(matrix())
+
+
+perf = as.data.frame.matrix(coef(models[[i]]$finalModel, models[[i]]$finalModel$lambdaOpt))
+data_3 <- cbind(data, new_col = vec)
+
+# Export coefficients of final model trained on the whole data. 
+betas <- data.frame(
+  l_bs = as.data.frame.matrix(coef(l_bs$finalModel, l_bs$finalModel$lambdaOpt)), 
+  l_cv = as.data.frame.matrix(coef(l_cv$finalModel, l_cv$finalModel$lambdaOpt)),
+  ols = ols$finalModel$coefficients,
+  ols_r = ols_r$coefficients
+) #%>%   rename(l_nocv = s1, l_cv = s1.1)
+
+betas
+
+
+

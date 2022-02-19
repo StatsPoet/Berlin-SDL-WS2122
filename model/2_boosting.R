@@ -3,6 +3,7 @@ library(caret)
 library(here)
 library(dplyr)
 library(gbm)
+library(ranger)
 options(scipen=999)
 
 # Load full data
@@ -10,15 +11,11 @@ load(here("data", "berlin", "b_metric_pic_abs_temp.Rda"))
 data <- metric_pic_abs_temp
 rm(metric_pic_abs_temp)
 
-# Train data
+
 x_tr <- model.matrix(price ~ ., train)[,-1] # x_tr stands for training
 y_tr <- train$price
-
-# Validation data
 x_tst<-  model.matrix(price ~ ., test)[,-1] # x_tst stands for validation
 y_tst<- test$price
-
-# Full data
 x <-  model.matrix(price ~ ., data)[,-1] # combined data set of train and valid.
 y <- data$price
 
@@ -52,7 +49,7 @@ ctrl_cv <- trainControl(## 10-fold CV
 # Set the grid of parameters to be optimized
 set.seed(69)
 gbm_grid <- expand.grid(interaction.depth = 1,
-                        shrinkage = seq(0.001, 0.202, 0.04),
+                        shrinkage = seq(0.001, 0.202, 0.04), # 3 Parameters only. 
                         n.trees = c(5000),
                         n.minobsinnode = 10)
 
@@ -79,9 +76,62 @@ boost_centered <- train(x_tr,
                         distribution = "gaussian")
 
 
+
+
+
 #------------------- Export models 
 boost_models <- list(boost)
                      #, boost_centered)
 names(boost_models) <- c("Boost")
                          #,"Boost Centered")
 save(boost_models, boost,  file = here("model", "boost.Rda"))
+
+
+
+# -----------------Fit best 
+load(here("model", "boost.Rda"))
+
+# Best Hyperparameters
+boost$bestTune
+
+# Set control and methods grids
+ctrl_ff <- trainControl(method = "none")
+fgbm_grid <- expand.grid(interaction.depth = 1,
+                        shrinkage = seq(0.001),
+                        n.trees = c(5000),
+                        n.minobsinnode = 10)
+
+f_boost <- train(x,
+               y,
+               trControl = ctrl_ff,
+               method = "gbm",
+               tuneGrid = fgbm_grid,
+               metric = "RMSE",
+               #preProc = c("center", "scale"),
+               distribution = "gaussian")
+
+f_boost_s <- train(x,
+               y,
+               trControl = ctrl_ff,
+               method = "gbm",
+               tuneGrid = fgbm_grid,
+               metric = "RMSE",
+               preProc = c("center", "scale"),
+               distribution = "gaussian")
+
+f_boost_slog <- train(x,
+               log(y),
+               trControl = ctrl_ff,
+               method = "gbm",
+               tuneGrid = fgbm_grid,
+               metric = "RMSE",
+               preProc = c("center", "scale"),
+               distribution = "gaussian")
+
+boost_models_best <- list(f_boost, f_boost_s, f_boost_slog)
+#, boost_centered)
+names(boost_models_best) <- c("Boost-f", "Boost S-f", "Boost S log(price)-f")
+#,"Boost Centered")
+save(boost_models_best,  file = here("model", "boost_best.Rda"))
+
+
