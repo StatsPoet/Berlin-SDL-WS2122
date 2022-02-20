@@ -19,10 +19,6 @@ library(here)
 load(here("data","munich", "m_metric_pic_abs_temp.Rda"))
 ```
 
-```{r}
-metric_pic_abs_temp <- subset(x = metric_pic_abs_temp, select = -c(Alarm_clock_pic_0))
-```
-
 
 ```{r}
 full_mun <- metric_pic_abs_temp
@@ -337,7 +333,7 @@ model <- build_abs_model()
 # Train it on the entirety of the data.
 model %>% fit(full_data, 
               full_targets,
-              epochs = 125, 
+              epochs = 160, 
               batch_size = 100, 
               verbose = 1)
 
