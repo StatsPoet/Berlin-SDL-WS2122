@@ -1,7 +1,7 @@
 ---
-title: "Dnn_to_results"
+title: "Dnn_to_ber_results"
 author: "Tobias_R"
-date: "20 Februar 2022"
+date: "21 Februar 2022"
 output: html_document
 ---
 
@@ -62,11 +62,4 @@ test_df <- apply(test_df, 2, FUN = unlist)
 test_df <- as.data.frame.array(test_df)
 test_df <- as.data.frame.array(test_df)
 ```
-
-
-
-
-
-
-
 

@@ -12,6 +12,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(Metrics)
 library(keras)
 library(here)
+library(ggplot2)
 ```
 
 # load in data 
@@ -32,8 +33,20 @@ std <- apply(mun_data, 2, sd) # stdev of each column
 mun_data <- scale(mun_data, center = mean, scale = std)
 ```
 
+
+
 ```{r}
 load(here("data","berlin", "b_metric_pic_abs_temp.Rda"))
+```
+
+```{r}
+set.seed (69)
+library(caret)
+id <- createDataPartition(metric_pic_abs_temp$price, p = .8,
+                          list = FALSE,
+                          times = 1)
+train <- metric_pic_abs_temp[id,]
+test <- metric_pic_abs_temp[-id,]
 ```
 
 
@@ -141,13 +154,15 @@ build_base_model <- function() {
 ```
 
 
-## Model for the abs data set
+## Model for the abs data set (beefy boi)
 ```{r}
 build_abs_model <- function() {
   network <- keras_model_sequential() %>% 
-    layer_dense(units = 24, activation = "tanh", input_shape = dim(train_data)[2]) %>%
+    layer_dense(units = 189, activation = "tanh", input_shape = dim(train_data)[2]) %>%
     layer_dropout(0.17) %>%
-    layer_dense(units = 12, activation = "tanh") %>%
+    layer_dense(units = 126, activation = "tanh") %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 63, activation = "tanh") %>%
     layer_dropout(0.17) %>%
     layer_dense(units = 1) 
     
@@ -158,7 +173,6 @@ build_abs_model <- function() {
   )
 }
 ```
-
 
 ## Model in progress for dummi set
 Added additional layers and units to account for the higher number of variables in the dum set. 
@@ -216,10 +230,10 @@ folds <- cut(indices, breaks = k, labels = FALSE) # divide the ordered indices i
 
 ## test if everything works by running cross val with low num_epoch , high batch size, k = 1 and base_model
 ```{r kfold100, cache = T}
-num_epochs <- 10
+num_epochs <- 50
 all_scores <- c() # An empty vector to store the results from evaluation
 
-for (i in 1:1) {
+for (i in 1:k) {
   cat("processing fold #", i, "\n")
   # Prepare the validation data: data from partition # k
   val_indices <- which(folds == i, arr.ind = TRUE) 
@@ -233,18 +247,18 @@ for (i in 1:1) {
   partial_train_targets <- train_targets[-val_indices]
   
   # Call our model function (see above)
-  network <- build_base_model() #adjust to eatherbase model or model
+  network <- build_abs_model() #adjust to eatherbase model or model
   
   # summary(model)
   # Train the model (in silent mode, verbose=0)
   network %>% fit(partial_train_data,
                   partial_train_targets,
                   epochs = num_epochs,
-                  batch_size = 250,
+                  batch_size = 100,
                   verbose = 0)
                 
   # Evaluate the model on the validation data
-  results <- network %>% evaluate(val_data, val_targets, verbose = 0)
+  results <- network %>% evaluate(val_data, val_targets, verbose = 1)
   all_scores <- c(all_scores, results[2])
 }  
 ```
@@ -270,7 +284,7 @@ Train abs_model with suggested hp from caret:
 
 - the batchsize suggested by caret is very high. Try 500 one time
 ```{r kfold500, echo = T, results = 'hide', cache = T}
-num_epochs <- 250
+num_epochs <- 200
 all_mae_histories <- NULL  # an empty object to cumulatively store the model metrics
 
 for (i in 1:k) {
@@ -333,7 +347,7 @@ model <- build_abs_model()
 # Train it on the entirety of the data.
 model %>% fit(full_data, 
               full_targets,
-              epochs = 160, 
+              epochs = 40, 
               batch_size = 100, 
               verbose = 1)
 
@@ -345,11 +359,11 @@ result
 ```
 
 ```{r}
-#model %>% save_model_tf("nn_abs_full")
+#model %>% save_model_tf("nn_abs_full_wide")
 ```
 
 ```{r}
-model <- load_model_tf("nn_abs_full")
+model <- load_model_tf("nn_abs_wide")
 ```
 
 
@@ -368,6 +382,43 @@ rmse(train_targets, predictions_train)
 ```{r}
 predictions_mun <- model %>% predict(x = mun_data)
 rmse(mun_targets, predictions_mun)
+```
+
+```{r}
+library(MLmetrics)
+rmse_dnn_ber <- RMSE(predictions_test, test_targets)
+R2_dnn_ber <- R2_Score(predictions_test, test_targets)
+MAE_dnn_ber <- MAE(predictions_test, test_targets)
+```
+
+```{r}
+res_dnn <- list(rmse_dnn_ber, R2_dnn_ber, MAE_dnn_ber)
+res_dnn
+```
+
+```{r}
+library(MLmetrics)
+rmse_dnn_ber_tr <- RMSE(predictions_train, train_targets)
+R2_dnn_ber_tr <- R2_Score(predictions_train, train_targets)
+MAE_dnn_ber_tr <- MAE(predictions_train, train_targets)
+```
+
+```{r}
+res_dnn <- list(rmse_dnn_ber_tr, R2_dnn_ber_tr, MAE_dnn_ber_tr)
+res_dnn
+```
+
+
+```{r}
+library(MLmetrics)
+rmse_dnn_mun <- RMSE(predictions_mun, mun_targets)
+R2_dnn_mun <- R2_Score(predictions_mun, mun_targets)
+MAE_dnn_mun <- MAE(predictions_mun, mun_targets)
+```
+
+```{r}
+res_dnn <- list(rmse_dnn_mun, R2_dnn_mun, MAE_dnn_mun)
+res_dnn
 ```
 
 
