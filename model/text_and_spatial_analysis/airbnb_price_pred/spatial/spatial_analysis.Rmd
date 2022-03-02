@@ -37,7 +37,7 @@ library("geoR")
 # Convert data frame to sf object
 spatial_airbnb_sf <- st_as_sf(x = dataset_mod, 
                         coords = c("longitude", "latitude"),
-                        crs = "+proj=utm +zone=32 ellps=WGS84 +units=km") #could be changed to meter
+                        crs = "+proj=utm +zone=32 ellps=WGS84 +units=m") #could be changed to meter
 
 # convert to sp object if needed
 spatial_airbnb_sp <- as(spatial_airbnb_sf, "Spatial")
@@ -85,7 +85,7 @@ plot(v)
 cov_est1 <- likfit(
   geodata = berlin_geodata_full,
   cov.model = "exponential",
-  ini.cov.pars = c(1, 1),
+  ini.cov.pars = c(0.1, 0.1),
   nugget = 0,
   fix.nugget = FALSE,
   messages = TRUE

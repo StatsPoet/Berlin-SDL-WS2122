@@ -74,39 +74,6 @@ for (i in 1:length(descriptions)){
 ```
 
 
-```{r}
-#Delete NA
-na_pos <- lapply(sorted_text, which_zwei, str = "NA")
-sorted_text_tidy <- list()
-for (i in 1:length(sorted_text)) {
-  if (length(na_pos[[i]] != 0)) {
-    sorted_text_tidy[[i]] <- sorted_text[[i]][-c(na_pos[[i]])]
-  } else {
-    sorted_text_tidy[[i]] <- sorted_text[[i]]
-  }
-}
-
-#Delete empty positions 
-empty_pos <- lapply(sorted_text_tidy, which_zwei, str = "")
-for (i in 1:length(sorted_text_tidy)) {
-  if (length(empty_pos[[i]] != 0)) {
-    sorted_text_tidy[[i]] <- sorted_text_tidy[[i]][-c(empty_pos[[i]])]
-  } else {
-    sorted_text_tidy[[i]] <- sorted_text_tidy[[i]]
-  }
-}
-
-empty_pos_blank <- lapply(sorted_text_tidy, which_zwei, str = " ")
-for (i in 1:length(sorted_text_tidy)) {
-  if (length(empty_pos_blank[[i]] != 0)) {
-    sorted_text_tidy[[i]] <- sorted_text_tidy[[i]][-c(empty_pos_blank[[i]])]
-  } else {
-    sorted_text_tidy[[i]] <- sorted_text_tidy[[i]]
-  }
-}
-```
-
-
 
 
 #Word Cloud
@@ -127,8 +94,8 @@ wordclouds <- lapply(X = sorted_text_tidy, FUN = wordc_prep)
 ```{r}
 wc_plots <- list()
 for (i in 1:length(wordclouds)) {
-  d <- wordclouds[[i]]
- wc_plots[[i]] <-  wordcloud2(data = d, color = "random-light", backgroundColor = "void")
+  d <- wordclouds[[1]]
+ wc_plots[[1]] <-  wordcloud2(data = d, backgroundColor = "white")
 }
 wc_plots
 
