@@ -50,6 +50,7 @@ test <- metric_pic_abs_temp[-id,]
 ```
 
 
+
 ```{r}
 full_data <- metric_pic_abs_temp
 train_data <- train
@@ -174,6 +175,24 @@ build_abs_model <- function() {
 }
 ```
 
+```{r}
+build_abs_model <- function() {
+  network <- keras_model_sequential() %>% 
+    layer_dense(units = 12, activation = "tanh", input_shape = dim(train_data)[2]) %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 12, activation = "tanh") %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 1) 
+    
+  network %>% compile(
+    optimizer = "rmsprop", 
+    loss = "mse", 
+    metrics = c("mae")
+  )
+}
+```
+
+
 ## Model in progress for dummi set
 Added additional layers and units to account for the higher number of variables in the dum set. 
 For a large input layer the leaky relu is suggested. 
@@ -218,6 +237,8 @@ and the mean absolute error (MAE):
 
 $$\mathrm{MAE} = \frac{\sum_{i=1}^n\left| y_i-\hat{y_i}\right|}{n} = \frac{\sum_{i=1}^n\left| e_i\right|}{n}$$
 where $\hat{y_i}$ is the predicted value, given in our last single-unit layer, and $y_i$ is the actual value, the label.
+
+
 
 # Part 3: k-fold cross validation
 
@@ -345,10 +366,10 @@ Train model one last time with hyperparameters as defined above
 model <- build_abs_model()
 
 # Train it on the entirety of the data.
-model %>% fit(full_data, 
-              full_targets,
+model %>% fit(train_data, 
+              train_targets,
               epochs = 40, 
-              batch_size = 100, 
+              batch_size = 100,
               verbose = 1)
 
 result <- model %>% evaluate(test_data, test_targets)
@@ -364,6 +385,10 @@ result
 
 ```{r}
 model <- load_model_tf("nn_abs_wide")
+```
+
+```{r}
+model %>% summary("nn_abs_wide")
 ```
 
 

@@ -1,0 +1,297 @@
+---
+title: "dnn_with_validation"
+author: "Tobias_R"
+date: "28 Februar 2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+#Prepare data
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Metrics)
+library(keras)
+library(here)
+library(ggplot2)
+```
+
+```{r}
+load(here("data","berlin", "b_metric_pic_abs_temp.Rda"))
+```
+
+```{r}
+library(caret)
+
+id_val <- createDataPartition(train$price, p = 0.6,
+                          list = FALSE,
+                          times = 1)
+train_val <- train[id_val,]
+val <- train[-id_val,]
+```
+
+
+```{r}
+full_data <- metric_pic_abs_temp
+train_data <- train_val
+test_data <- test
+val_data <- val
+train_full <- train
+```
+
+```{r}
+dim(full_data)
+dim(train_full)
+dim(train_data)
+dim(val_data)
+dim(test_data)
+```
+
+## split dataset into training and test set.
+Because k-fold cross-validation is used, there is no need for a validation set
+
+```{r}
+View(test_data[0:10,])
+```
+
+
+## trnsform price to log price
+```{r}
+train_targets <- log(train_data["price"]) #vary later to see if val_mae changes
+test_targets <- log(test_data["price"]) #vary later to see if val_mae changes
+full_targets <- log(full_data["price"])
+val_targets <- log(val_data["price"])
+train_full_targets <- log(train_full["price"])
+
+#train_targets <- train_data["price"] #no log
+#test_targets <- test_data["price"] # no log
+
+train_data <- subset(x = train_data, select = -c(price))
+test_data <- subset(x = test_data, select = -c(price))
+full_data <- subset(x = full_data, select = -c(price))
+val_data <- subset(x = val_data, select = -c(price))
+train_full <- subset(x = train_full, select = -c(price))
+```
+
+## transform data to matrix, so that keras can work with it
+```{r}
+train_targets <- unlist(c(train_targets))
+test_targets <- unlist(c(test_targets))
+full_targets <- unlist(c(full_targets))
+val_targets <- unlist(c(val_targets))
+train_full_targets <- unlist(c(train_full_targets))
+
+train_data <- array(train_data)
+test_data <- array(test_data)
+full_data <- array(full_data)
+val_data <- array(val_data)
+train_full <- array(train_full)
+```
+
+
+## standardize data with z-score
+should be the same as sebs
+```{r zScores, cache = T}
+# parameters for Scaling:
+mean <- colMeans(full_data) # mean of each column
+std <- apply(full_data, 2, sd) # stdev of each column
+
+# Calculate feature-wise (within-variable) z-scores: (x - mean)/std
+train_data <- scale(train_data, center = mean, scale = std)
+test_data <- scale(test_data, center = mean, scale = std)
+full_data <- scale(full_data, center = mean, scale = std)
+val_data <- scale(val_data, center = mean, scale = std)
+train_full <- scale(train_full, center = mean, scale = std)
+```
+
+```{r}
+dim(full_data)
+dim(train_full)
+dim(train_data)
+dim(val_data)
+dim(test_data)
+```
+
+
+## Model for the abs data set 
+```{r}
+build_small_model <- function() {
+  network <- keras_model_sequential() %>% 
+    layer_dense(units = 12, activation = "tanh", input_shape = dim(train_data)[2]) %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 12, activation = "tanh") %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 1) 
+    
+  network %>% compile(
+    optimizer = "rmsprop", 
+    loss = "mse", 
+    metrics = c("mae")
+  )
+}
+```
+
+# build deeper model
+```{r}
+build_deep_model <- function() {
+  network <- keras_model_sequential() %>% 
+    layer_dense(units = 32, activation = "tanh", input_shape = dim(train_data)[2]) %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 16, activation = "tanh") %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 16, activation = "tanh") %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 8, activation = "tanh") %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 1) 
+    
+  network %>% compile(
+    optimizer = "rmsprop", 
+    loss = "mse", 
+    metrics = c("mae")
+  )
+}
+```
+
+## Model for the abs data set (beefy boi)
+```{r}
+build_beef_model <- function() {
+  network <- keras_model_sequential() %>% 
+    layer_dense(units = 189, activation = "tanh", input_shape = dim(train_data)[2]) %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 126, activation = "tanh") %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 63, activation = "tanh") %>%
+    layer_dropout(0.17) %>%
+    layer_dense(units = 1) 
+    
+  network %>% compile(
+    optimizer = "rmsprop", 
+    loss = "mse", 
+    metrics = c("mae")
+  )
+}
+```
+
+# Validate our approach without k-fold-cross validation
+
+Let's set apart 10,000 samples in our training data to use as a validation set:
+
+```{r}
+['Alarm_clock', 'Bathroom_cabinet', 'Bathtub', 'Bed', 'Bookcase', 'Ceiling_fan', 'Chest_of_drawers', 'Clock', 'Closet', 'Computer_monitor', 'Couch', 'Curtain', 'Dining_table', 'Dishwasher', 'Drawer', 'Fireplace', 'Gas_stove', 'Home_appliance', 'Infant_bed', 'Microwave_oven', 'Sofa_bed', 'Toilet', 'Wardrobe', 'Washing_machine']
+```
+
+
+
+```{r echo=TRUE, results = "hide", warning = FALSE}
+model <- build_small_model()
+history <- model %>% fit(
+  train_data,
+  train_targets,
+  epochs = 100,
+  batch_size = 100,
+  validation_data = list(val_data, val_targets)
+)
+```
+
+Let's display its loss and accuracy curves:
+
+```{r}
+plot(history)
+```
+
+Train model one last time with hyperparameters as defined above
+
+```{r}
+#model %>% save_model_tf("nn_abs_full_wide")
+```
+
+```{r}
+#model <- load_model_tf("nn_abs_wide")
+```
+
+Train once more with full train set
+
+```{r runZ, echo = F, results = 'hide', cache = T}
+# Get a fresh, compiled model.
+model <- build_small_model()
+
+# Train it on the entirety of the data.
+model %>% fit(train_full, 
+              train_full_targets,
+              epochs = 70, 
+              batch_size = 100,
+              verbose = 1)
+
+result <- model %>% evaluate(test_data, test_targets)
+```
+
+# Predict and calc rmse
+```{r}
+predictions_test <- model %>% predict(x = test_data)
+predictions_train <- model %>% predict(x = train_data)
+```
+
+
+```{r}
+rmse(test_targets, predictions_test)
+rmse(train_targets, predictions_train)
+```
+
+```{r}
+library(MLmetrics)
+RMSE(predictions_test, test_targets)
+R2_Score(predictions_test, test_targets)
+MAE(predictions_test, test_targets)
+```
+# Train on full data
+```{r runZ, echo = F, results = 'hide', cache = T}
+# Get a fresh, compiled model.
+model <- build_small_model()
+
+# Train it on the entirety of the data.
+model %>% fit(full_data, 
+              full_targets,
+              epochs = 40, 
+              batch_size = 100,
+              verbose = 1)
+
+result <- model %>% evaluate(test_data, test_targets)
+```
+
+# load in data of munich
+```{r}
+load(here("data","munich", "m_metric_pic_abs_temp.Rda"))
+```
+
+
+```{r}
+full_mun <- metric_pic_abs_temp
+mun_targets <- log(full_mun["price"])
+mun_targets <- unlist(c(mun_targets))
+mun_data <- subset(x = full_mun, select = -c(price))
+mun_data <- array(mun_data)
+
+mean <- colMeans(mun_data) # mean of each column
+std <- apply(mun_data, 2, sd) # stdev of each column
+mun_data <- scale(mun_data, center = mean, scale = std)
+```
+
+```{r}
+predictions_mun <- model %>% predict(x = mun_data)
+rmse(mun_targets, predictions_mun)
+```
+
+```{r}
+library(MLmetrics)
+RMSE(predictions_mun, mun_targets)
+R2_Score(predictions_mun, mun_targets)
+MAE(predictions_mun, mun_targets)
+```
+```{r}
+model %>% summary()
+```
+

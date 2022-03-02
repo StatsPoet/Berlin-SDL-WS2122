@@ -18,37 +18,65 @@ library(ggplot2)
 ```
 
 ```{r}
-load(file = here("model", "final train performance", "final_results.Rda"))
+load(file = here("model", "hyperparameter tuning performance", "hp_results.Rda"))
 ```
 
 ```{r}
-load(here("data","munich", "m_metric_pic_abs_temp.Rda"))
+load(here("data","berlin", "b_metric_pic_abs_temp.Rda"))
 ```
 
 ```{r}
-full_mun <- metric_pic_abs_temp
-mun_targets <- log(full_mun["price"])
-mun_targets <- unlist(c(mun_targets))
-mun_data <- subset(x = full_mun, select = -c(price))
-mun_data <- array(mun_data)
-
-mean <- colMeans(mun_data) # mean of each column
-std <- apply(mun_data, 2, sd) # stdev of each column
-mun_data <- scale(mun_data, center = mean, scale = std)
+full_data <- metric_pic_abs_temp
+train_data <- train
+test_data <- test
 ```
 
 ```{r}
-model <- load_model_tf(here("model", "dnn", "nn_abs_full_wide"))
+train_targets <- log(train_data["price"]) #vary later to see if val_mae changes
+test_targets <- log(test_data["price"]) #vary later to see if val_mae changes
+full_targets <- log(full_data["price"])
+
+#train_targets <- train_data["price"] #no log
+#test_targets <- test_data["price"] # no log
+
+train_data <- subset(x = train_data, select = -c(price))
+test_data <- subset(x = test_data, select = -c(price))
+full_data <- subset(x = full_data, select = -c(price))
+
 ```
 
 ```{r}
-predictions_mun <- model %>% predict(x = mun_data)
+train_targets <- unlist(c(train_targets))
+test_targets <- unlist(c(test_targets))
+full_targets <- unlist(c(full_targets))
+train_data <- array(train_data)
+test_data <- array(test_data)
+full_data <- array(full_data)
+```
+
+```{r zScores, cache = T}
+# parameters for Scaling:
+mean <- colMeans(train_data) # mean of each column
+std <- apply(train_data, 2, sd) # stdev of each column
+
+# Calculate feature-wise (within-variable) z-scores: (x - mean)/std
+train_data <- scale(train_data, center = mean, scale = std)
+test_data <- scale(test_data, center = mean, scale = std)
+full_data <- scale(full_data, center = mean, scale = std)
 ```
 
 ```{r}
-rmse_dnn_mun <- RMSE(predictions_mun, mun_targets)
-R2_dnn_mun <- R2_Score(predictions_mun, mun_targets)
-MAE_dnn_mun <- MAE(predictions_mun, mun_targets)
+model <- load_model_tf(here("model", "dnn", "nn_abs_wide"))
+```
+
+```{r}
+predictions_ber <- model %>% predict(x = test_data)
+```
+
+```{r}
+rmse_dnn_mun <- RMSE(predictions_ber, test_targets)
+R2_dnn_mun <- R2_Score(predictions_ber, test_targets)
+MAE_dnn_mun <- MAE(predictions_ber, test_targets)
 ```
 
 ```{r}
