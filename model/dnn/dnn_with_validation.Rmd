@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+# this script uses a validation set instead of k-fold-cross-validation
 
 #Prepare data
 
@@ -178,14 +179,6 @@ build_beef_model <- function() {
 
 # Validate our approach without k-fold-cross validation
 
-Let's set apart 10,000 samples in our training data to use as a validation set:
-
-```{r}
-['Alarm_clock', 'Bathroom_cabinet', 'Bathtub', 'Bed', 'Bookcase', 'Ceiling_fan', 'Chest_of_drawers', 'Clock', 'Closet', 'Computer_monitor', 'Couch', 'Curtain', 'Dining_table', 'Dishwasher', 'Drawer', 'Fireplace', 'Gas_stove', 'Home_appliance', 'Infant_bed', 'Microwave_oven', 'Sofa_bed', 'Toilet', 'Wardrobe', 'Washing_machine']
-```
-
-
-
 ```{r echo=TRUE, results = "hide", warning = FALSE}
 model <- build_small_model()
 history <- model %>% fit(
@@ -197,13 +190,10 @@ history <- model %>% fit(
 )
 ```
 
-Let's display its loss and accuracy curves:
 
 ```{r}
 plot(history)
 ```
-
-Train model one last time with hyperparameters as defined above
 
 ```{r}
 #model %>% save_model_tf("nn_abs_full_wide")
@@ -280,6 +270,7 @@ std <- apply(mun_data, 2, sd) # stdev of each column
 mun_data <- scale(mun_data, center = mean, scale = std)
 ```
 
+# predict for mun
 ```{r}
 predictions_mun <- model %>% predict(x = mun_data)
 rmse(mun_targets, predictions_mun)

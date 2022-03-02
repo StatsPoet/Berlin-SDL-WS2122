@@ -5,6 +5,7 @@ date: "15 Februar 2022"
 output: html_document
 ---
 
+# small script to open saved dnns and get the summary
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```

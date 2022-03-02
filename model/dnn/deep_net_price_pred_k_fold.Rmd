@@ -125,7 +125,6 @@ library(Metrics) #for rmse
 
 ## Install tensorflow 
 
-It's only necessary to run this once. 
 
 ```{r install, eval = F}
 # for GPU
@@ -135,7 +134,7 @@ It's only necessary to run this once.
 # install_keras() # for cpu
 ```
 
-# Part 2: Define Network
+# Define Network
 
 ## This is the base model I started with
 
@@ -175,8 +174,9 @@ build_abs_model <- function() {
 }
 ```
 
+small model
 ```{r}
-build_abs_model <- function() {
+build_small_model <- function() {
   network <- keras_model_sequential() %>% 
     layer_dense(units = 12, activation = "tanh", input_shape = dim(train_data)[2]) %>%
     layer_dropout(0.17) %>%
@@ -198,7 +198,7 @@ Added additional layers and units to account for the higher number of variables 
 For a large input layer the leaky relu is suggested. 
 
 - i use sigmoid only in the last one even though caret suggests it in general. 
-But if i use leaky_relu i can present it. 
+use leaky_relu 
 Since it could help with a large data frame, it makes sense here
 ```{r defModel}
 build_dum_model <- function() {
@@ -228,19 +228,8 @@ build_dum_model <- function() {
 }
 ```
 
-optimizer_rmsprop(learning_rate  = 0.58, rho = 0.32, decay = 0.41)
 
-Note two new functions here, the mean squared error:
-
-$$\operatorname{MSE} = \frac{\sum_{i=1}^n(y_i-\hat{y_i})^2}{n} = \frac{\sum_{i=1}^n{e_i^2}}{n}$$
-and the mean absolute error (MAE):
-
-$$\mathrm{MAE} = \frac{\sum_{i=1}^n\left| y_i-\hat{y_i}\right|}{n} = \frac{\sum_{i=1}^n\left| e_i\right|}{n}$$
-where $\hat{y_i}$ is the predicted value, given in our last single-unit layer, and $y_i$ is the actual value, the label.
-
-
-
-# Part 3: k-fold cross validation
+#k-fold cross validation
 
 ```{r setkFold, echo = TRUE, results = 'hide'}
 k <- 10 # as suggested by caret
@@ -293,7 +282,7 @@ results
 
 ### Training with more computational time. Adjust num_epoch and batch size
 
-Let's try training the network for a bit longer: 500 epochs. To keep a record of how well the model did at each epoch, we will modify our training loop to save the per-epoch validation score log:
+
 
 ```{r clearMem}
 # Some memory clean-up
@@ -352,6 +341,7 @@ p +
 p + 
   geom_smooth(e = FALSE)
 ```
+
 #Find the lowest value
 ```{r}
 which(x = average_mae_history$validation_mae == min(average_mae_history))
@@ -392,7 +382,7 @@ model %>% summary("nn_abs_wide")
 ```
 
 
-# Predict and calc rmse
+# Predict and calc rmse etc.
 ```{r}
 predictions_test <- model %>% predict(x = test_data)
 predictions_train <- model %>% predict(x = train_data)

@@ -1,0 +1,155 @@
+---
+title: "Marker_OE_R"
+author: "Tobias Rinnert"
+date: "2 9 2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# This is a atempt to analyse the text data. 
+
+#Requirements
+```{r}
+library(readxl)
+library(ggpubr)
+library(factoextra)
+library(tm) # for text mining
+library(SnowballC) # for text stemming
+library(wordcloud2) # word-cloud generator 
+```
+
+#Reading in the data 
+```{r}
+library(readr)
+X2_text <- read_csv("2_text.csv")
+View(X2_text)
+```
+
+```{r}
+descriptions <- X2_text["description"]
+descriptions <- descriptions[1:100,]
+descriptions <- descriptions[[1]]
+#descriptions[1]
+```
+
+#Editing the text 
+```{r}
+# Load
+mod_desc <- list()
+for (i in 1:length(descriptions)){
+  text <- descriptions[i]
+
+  docs <- Corpus(VectorSource(text))
+  toSpace <- content_transformer(function(x, pattern ) gsub(pattern, " ", x))
+  docs <- tm_map(docs, toSpace, "/")
+  docs <- tm_map(docs, toSpace, "@")
+  docs <- tm_map(docs, toSpace, "\\|")
+  
+  # Convert the text to lower case
+  docs <- tm_map(docs, content_transformer(tolower))
+  # Remove numbers
+  docs <- tm_map(docs, removeNumbers)
+  # Remove german common stopwords
+  docs <- tm_map(docs, removeWords, stopwords("german"))
+  # Remove englisch common stopwords
+  docs <- tm_map(docs, removeWords, stopwords("english"))
+  # Remove punctuations
+  docs <- tm_map(docs, removePunctuation)
+  # Eliminate extra white spaces
+  docs <- tm_map(docs, stripWhitespace)
+  # Text stemming
+  docs_2 <- tm_map(docs, stemDocument)
+  # l?scht alle Umlaute und vereinfacht Text stark. Unischer ob notwendig/ sch?dlich
+  text_two <- unlist(as.list(docs))
+  
+  mod_desc[i] <- text_two
+  
+}
+
+```
+
+
+```{r}
+#Delete NA
+na_pos <- lapply(sorted_text, which_zwei, str = "NA")
+sorted_text_tidy <- list()
+for (i in 1:length(sorted_text)) {
+  if (length(na_pos[[i]] != 0)) {
+    sorted_text_tidy[[i]] <- sorted_text[[i]][-c(na_pos[[i]])]
+  } else {
+    sorted_text_tidy[[i]] <- sorted_text[[i]]
+  }
+}
+
+#Delete empty positions 
+empty_pos <- lapply(sorted_text_tidy, which_zwei, str = "")
+for (i in 1:length(sorted_text_tidy)) {
+  if (length(empty_pos[[i]] != 0)) {
+    sorted_text_tidy[[i]] <- sorted_text_tidy[[i]][-c(empty_pos[[i]])]
+  } else {
+    sorted_text_tidy[[i]] <- sorted_text_tidy[[i]]
+  }
+}
+
+empty_pos_blank <- lapply(sorted_text_tidy, which_zwei, str = " ")
+for (i in 1:length(sorted_text_tidy)) {
+  if (length(empty_pos_blank[[i]] != 0)) {
+    sorted_text_tidy[[i]] <- sorted_text_tidy[[i]][-c(empty_pos_blank[[i]])]
+  } else {
+    sorted_text_tidy[[i]] <- sorted_text_tidy[[i]]
+  }
+}
+```
+
+
+
+
+#Word Cloud
+```{r}
+sorted_text_tidy <- mod_desc
+
+wordc_prep <- function(x) {
+  docs <- Corpus(VectorSource(x))
+  dtm <- TermDocumentMatrix(docs)
+  m <- as.matrix(dtm)
+  v <- sort(rowSums(m),decreasing = TRUE)
+  d <- data.frame(word = names(v),freq = v)
+}
+
+wordclouds <- lapply(X = sorted_text_tidy, FUN = wordc_prep) 
+```
+
+```{r}
+wc_plots <- list()
+for (i in 1:length(wordclouds)) {
+  d <- wordclouds[[i]]
+ wc_plots[[i]] <-  wordcloud2(data = d, color = "random-light", backgroundColor = "void")
+}
+wc_plots
+
+
+```
+
+
+# save wordclouds
+```{r}
+setwd("Wordclouds")
+library(webshot)
+library("htmlwidgets")
+for (i in 1:length(wc_plots)) {
+  saveWidget(widget = wc_plots[[i]], background = "void", selfcontained = F, file =
+               paste("Wordclouds", i, ".html", sep= "")
+             )
+}
+
+for (i in 1:length(wc_plots)) {
+  webshot(url = paste("Wordclouds", i, ".html", sep= ""), file = paste("wordcloud_", i, ".png",sep = ""), delay =5, vwidth = 480, vheight=480
+          )
+}
+```
+

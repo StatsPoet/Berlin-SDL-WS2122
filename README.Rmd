@@ -16,32 +16,14 @@ knitr::opts_chunk$set(echo = TRUE,
                       eval = FALSE)
 ```
 
-# ToDo
-Tobi meinte der nutzt kein Test set. 
-He does. 
-
-1. Partition. Train test.
-2. Hyperparameter Tunning upon train und test. 
-3. With best hp, on the full set. 
-
-Problems: 
-1. Seed is not the same. 69 == 123. Es kann sein, dass Performance auf die unterschidliche Partition züruck zu führen ist. 
-2. dnn ist mit log(price) und normalizing gemacht worden. 
-
-
-
 ### Report (15 Seiten) (Sebi/Tobi)
 
 
 
-## Anmeldedaten für DeepL Videos bei Manning (DeepLearnng with R in motion):
--   tobirinnert@gmail.com
--   DeepLearningWS2021
+This repo holds all the code we wrote for the deep learning seminar WS 21/22. 
+While the main analysis was done in R, the image analysis was done in python. The scripts and files for the image analysis can be found in the folder "image analysis". Since we worked with google drive for scraping the images and analysing them, the scripts do not run in this repo. However the basic folder structure was copied to this repo, when possible. So copying the folder "image analysis" to a drive account and then openening the colab scripts should set up the enviroment. For the multi detection dnn, one must first download the repository dircribed in the script for the multi detection model and in the paper. 
 
-##Anmeldedaten für den google account für colab und drive für image analysis
-### ACHTUNG! Die Struktur wurde noch nicht bearbeitet und mehrere Skripte sind paralel am arbeiten. 
-- Mail: deepl.seminar.colab@gmail.com
-- Passwort: nfrNTDSfpW8QkMsV
+Abstract of the final paper:
 
 
 

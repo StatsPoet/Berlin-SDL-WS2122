@@ -28,7 +28,6 @@ data <- work
 
 
 ## split dataset into training and test set.
-Because k-fold cross-validation is used, there is no need for a validation set
 
 ```{r}
 ## 85% of the sample size
@@ -96,8 +95,8 @@ library(keras)
 
 
 Tried to install mxnet but an error occurs. 
-TO get an approx. for the params, mlpKerasDropout should do
-For the dum data set, even for a neuralnet with layers of 500 the std can not be computed. My best guess is, that similiar to the problem with the deep_net script, the informations inside the dummi data set is just not high enough. For dum set with mlpdropout only nans were computed. I guess its the same reason as for the neuralnet. 
+To get an approx. for the params, mlpKerasDropout should do
+For the dummi data set, even for a neuralnet with layers of 500 the std can not be computed. My best guess is, that similiar to the problem with the deep_net script, the informations inside the dummi data set is just not high enough. For dum set with mlpdropout only nans were computed. I guess its the same reason as for the neuralnet. 
 
 The idea behind using neuralnet was to have a analytical way of tuning the architecture of our dnn.
 
@@ -105,7 +104,7 @@ But even for the abs data set, the neuralnet did also not work.
 
 However the mlpKerasDroput works. So we use that and then set the architecture of our nn our selfes.
 
-
+Find hyperparameters with adaptive resampling
 ```{r}
 train_df <- as.data.frame(train_data)
 
