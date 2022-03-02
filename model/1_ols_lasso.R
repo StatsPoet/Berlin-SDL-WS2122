@@ -16,7 +16,7 @@ library(dplyr)
 options(scipen=999)
 
 # Load full data
-load(here("data", "berlin", "b_metric_pic_abs_temp.Rda"))
+load(here("data", "berlin", "b_metric_pic_abs_temp_simple_bright.Rda"))
 data <- metric_pic_abs_temp
 rm(metric_pic_abs_temp)
 
@@ -130,6 +130,13 @@ names(ols_lasso) <- c("OLS",
                    "Lasso S + log(price)")
 save(ols_lasso,  file = here("model", "ols_lasso.Rda"))
 
+#------------------------------- Tobias wish
+lasso_SB <- list(lasso_c_log)
+names(lasso_SB) <- c("Lasso S + log(price)")
+save(lasso_SB,  file = here("model", "lasso_SB.Rda"))
+
+
+
 #-------------Last fit with best parameters. 
 
 # Best Hyperparameters
@@ -142,6 +149,7 @@ best_hp
 
 #----------------------------------------------------------------------- Final Train
 ctrl_ff <- trainControl(method = "none")
+
 
 
 # Model Fit:
@@ -189,3 +197,24 @@ names(ols_lasso_best) <- c("OLS-f",
                             "Lasso S_log(price)-f")
 
 save(ols_lasso_best,  file = here("model", "ols_lasso_best.Rda"))
+
+
+
+#------------------------------ Tobias Wish
+# Centered with log price
+f_lasso_c_log <- train(
+  x,
+  log(y),
+  method = "glmnet",
+  tuneGrid = expand.grid(alpha = 1, lambda = lasso_SB$`Lasso S + log(price)`$bestTune$lambda),
+  preProc = c("center", "scale"),
+  trControl = ctrl_ff
+)
+
+
+lasso_SB_best <- list(f_lasso_c_log)
+names(lasso_SB_best) <- c("Lasso S_log(price)-f")
+
+save(lasso_SB_best,  file = here("model", "lasso_SB_best.Rda"))
+
+

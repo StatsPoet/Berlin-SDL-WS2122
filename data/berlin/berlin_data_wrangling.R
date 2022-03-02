@@ -19,6 +19,8 @@ options(scipen = 999)
 # To Do:
 
 grand_listings <- read_csv(here("data","berlin", "raw_data","listings.csv.gz"))
+# nbh <- read_csv(here("data","berlin", "raw_data","neighbourhoods.csv"))
+# rvw <- read_csv(here("data","berlin", "raw_data","reviews.csv.gz"))
 
 # Grand Listings clean. The .gz one.  
 data <- grand_listings
