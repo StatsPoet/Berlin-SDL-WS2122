@@ -79,12 +79,6 @@ rf_centered <- train(x_tr,
                      preProc = c("center", "scale"))
 
 
-#------------------- Export models 
-rf_models <- list(rf, rf_centered)
-names(rf_models) <- c("RF","RF Centered")
-save(rf_models,  file = here("model", "rf.Rda"))
-
-
 # Best Hyperparameters
 best_hp <- list()
 for (i in 1:length(rf_models)) {
@@ -93,7 +87,61 @@ for (i in 1:length(rf_models)) {
 }
 best_hp
 
-## Final Train
+# Export hpt
+rf_models <- list(rf, rf_centered)
+names(rf_models) <- c("RF","RF Centered")
+save(rf_models,  file = here("model", "validation performance", "hpt", "rf.Rda"))
+
+
+
+
+#-------------------------- Validation
+load(here("model", "validation performance", "hpt", "rf.Rda"))
+
+ctrl_ff <- trainControl(method = "none")
+
+ff_grid <- expand.grid(
+  .mtry = 21, # only three options 
+  .splitrule = "variance",
+  .min.node.size = c(5)
+)
+
+
+
+rf <- train(x_tr,
+              y_tr,
+              method = "ranger",
+              trControl = ctrl_ff,
+              tuneGrid = ff_grid, 
+              metric = "RMSE" )
+
+rf_s <- train(x_tr,
+                y_tr,
+                trControl = ctrl_ff,
+                method = "ranger",
+                tuneGrid = ff_grid,
+                metric = "RMSE",
+                preProc = c("center", "scale"))
+
+
+rf_slog <- train(x_tr,
+                   log(y_tr),
+                   trControl = ctrl_ff,
+                   method = "ranger",
+                   tuneGrid = ff_grid,
+                   metric = "RMSE",
+                   preProc = c("center", "scale"))
+
+
+rf_models_val <- list(rf, rf_s, rf_slog)
+names(rf_models_val) <- c("RF-f","RF Standatd-f", "RF Standard Log(price)-f")
+save(rf_models_val,  file = here("model", "validation performance",  "rf_val.Rda"))
+
+
+
+
+#----------------------------- Test
+load(here("model", "validation performance", "hpt", "rf.Rda"))
 
 ctrl_ff <- trainControl(method = "none")
 

@@ -7,13 +7,42 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(readr)
+library(naniar)
+library(magrittr)
+library(anytime)
+library(lubridate)
+library(readr)
+library(here)
+library(caret)
+# Tobias
+library(reticulate)
+library(glmnet)
+library(caret)
+library(here)
+library(dplyr)
+library(glmnet)
+library(caret)
+library(here)
+library(dplyr)
+library(keras)
+library(gbm)
+library(purrr)
+library(gridExtra)
+library(ggplot2)
+library(cowplot)
+
+library(ranger)
 ```
+
+
+
+
 
 
 Tobi: Bitte listet sowie angezeigt alle packages, die du für das modelbau, bilder analyse etc genutzt hast. 
 ```{r pack tex, include=FALSE}
 # automatically create a bib database for R packages
- knitr::write_bib(c(
- .packages(), 'knitr', 'rmarkdown', 'gamboostLSS','mboost', 'tidyverse', 'microbenchmark'
-  ), 'packages.bib')
+ knitr::write_bib(x = .packages(), 'packages.bib')
 ```

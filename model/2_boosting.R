@@ -76,19 +76,66 @@ boost_centered <- train(x_tr,
                         distribution = "gaussian")
 
 
+# Best Hyperparameters
+boost$bestTune
 
+# Save results of hyperparameter Tuning
 
-
-#------------------- Export models 
 boost_models <- list(boost)
-                     #, boost_centered)
+#, boost_centered)
 names(boost_models) <- c("Boost")
-                         #,"Boost Centered")
-save(boost_models, boost,  file = here("model", "boost.Rda"))
+#,"Boost Centered")
+save(boost_models, boost,  file = here("model", "validation performance", "hpt", "boost.Rda"))
+
+
+#------------------- Validation
+load(here("model", "validation performance", "hpt", "boost.Rda"))
+
+# Set control and methods grids
+ctrl_ff <- trainControl(method = "none")
+fgbm_grid <- expand.grid(interaction.depth = 1,
+                         shrinkage = seq(0.001),
+                         n.trees = c(5000),
+                         n.minobsinnode = 10)
+
+boost <- train(x_tr,
+                 y_tr,
+                 trControl = ctrl_ff,
+                 method = "gbm",
+                 tuneGrid = fgbm_grid,
+                 metric = "RMSE",
+                 #preProc = c("center", "scale"),
+                 distribution = "gaussian")
+
+boost_s <- train(x_tr,
+                   y_tr,
+                   trControl = ctrl_ff,
+                   method = "gbm",
+                   tuneGrid = fgbm_grid,
+                   metric = "RMSE",
+                   preProc = c("center", "scale"),
+                   distribution = "gaussian")
+
+boost_slog <- train(x_tr,
+                      log(y_tr),
+                      trControl = ctrl_ff,
+                      method = "gbm",
+                      tuneGrid = fgbm_grid,
+                      metric = "RMSE",
+                      preProc = c("center", "scale"),
+                      distribution = "gaussian")
+
+boost_models_val <- list(boost, boost_s, boost_slog)
+#, boost_centered)
+names(boost_models_val) <- c("Boost-f", "Boost S-f", "Boost S log(price)-f")
+#,"Boost Centered")
+save(boost_models_val,  file = here("model", "validation performance", "boost_val.Rda"))
 
 
 
-# -----------------Fit best 
+
+
+# --------------------------------------- Test
 load(here("model", "boost.Rda"))
 
 # Best Hyperparameters
