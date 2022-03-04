@@ -24,22 +24,22 @@ y <- data$price
 
 
 # Load models 
-load(here("model", "final train performance", "ols_lasso_best.Rda"))
-load(here("model", "final train performance", "boost_best.Rda"))
-load(here("model", "final train performance", "rf_best.Rda"))
+load(here("model", "test performance", "ols_lasso_best.Rda"))
+load(here("model", "test performance", "boost_best.Rda"))
+load(here("model", "test performance", "rf_best.Rda"))
 
 # Merge Lists
 models <- c(ols_lasso_best[1:3], boost_models_best[1:2], rf_models_best[1:2], ols_lasso_best[4], boost_models_best[3],rf_models_best[3])
 names(models) <- c("OLS",
                    "Lasso",
                    "Lasso N",
-                   "Boost",
-                   "Boost N",
+                   "GBM",
+                   "GBM N",
                    "RF",
                    "RF N",
-                   "Lasso N-log(price)",
-                   "Boost N-log(price)",
-                   "RF N-log(price)"
+                   "Lasso N + log(price)",
+                   "GBM N + log(price)",
+                   "RF N + log(price)"
                    )
 
 
@@ -85,10 +85,10 @@ var_importance
 vip <- lapply(var_importance, plot, top = 20)
 names(vip) <- names(vip_models)
 
-vip_lasso <- plot_grid(vip[[1]], vip[[2]], vip[[3]], vip[[6]], ncol=2, nrow=2, labels = names(vip_models)[c(1:3,6)])
+vip_lasso <- plot_grid(vip[[2]], vip[[3]], vip[[6]], ncol=1, nrow=3, labels = names(vip_models)[c(2:3,6)])
 vip_lasso
 
-vip_boost <- plot_grid(vip[[4]], vip[[5]], vip[[7]], ncol=2, nrow=2, labels = names(vip_models)[c(4,5,7)])
+vip_boost <- plot_grid(vip[[4]], vip[[5]], vip[[7]], ncol=1, nrow=3, labels = names(vip_models)[c(4,5,7)])
 vip_boost
 
 
@@ -116,10 +116,10 @@ save(predictions,
      vip_lasso,
      vip_boost,
      var_importance,
-     file = here("model", "final train performance", "final_results.Rda"))
+     file = here("model", "test performance", "final_results.Rda"))
 
 #---------- Load Results
-load(here("model", "final train performance", "final_results.Rda"))
+load(here("model", "test performance", "final_results.Rda"))
 
 
 # 
