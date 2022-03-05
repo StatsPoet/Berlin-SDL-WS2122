@@ -24,11 +24,11 @@ plot(cor(df))
 
 
 ## Compare variable importance
-load(here("model", "final train performance", "ols_lasso_best.Rda"))
+load(here("model", "test performance", "ols_lasso_best.Rda"))
 vi_1 <- ols_lasso_best[[4]] %>% varImp()
 vi_1
 
-load(here("model", "final train performance", "lasso_SB_best.Rda"))
+load(here("model", "test performance", "lasso_SB_best.Rda"))
 
 vi_2 <- lasso_SB_best[[1]] %>% varImp()
 vi_2

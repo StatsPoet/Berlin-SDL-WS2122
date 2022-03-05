@@ -21,7 +21,7 @@ knitr::opts_chunk$set(echo = TRUE,
 
 
 This repo holds all the code we wrote for the deep learning seminar WS 21/22. 
-While the main analysis was done in R, the image analysis was done in python. The scripts and files for the image analysis can be found in the folder "image analysis". Since we worked with google drive for scraping the images and analysing them, the scripts do not run in this repo. However the basic folder structure was copied to this repo, when possible. So copying the folder "image analysis" to a drive account and then openening the colab scripts should set up the enviroment. For the multi detection dnn, one must first download the repository dircribed in the script for the multi detection model and in the paper. 
+While the main analysis was done in R, the image analysis was done in python. The scripts and files for the image analysis can be found in the folder "image analysis" inside "data". Since we worked with google drive for scraping the images and analysing them, the scripts do not run in this repo. However the basic folder structure was copied to this repo, when it was possible. So copying the content of the folder "image analysis" to a drive account and then openening the colab scripts should set up the enviroment. For the multi detection dnn, one must first download the repository dircribed in the script for the multi detection model and in the paper. 
 
 Abstract of the final paper:
 

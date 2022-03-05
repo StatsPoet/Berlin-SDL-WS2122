@@ -92,6 +92,18 @@ val_data <- array(val_data)
 train_full <- array(train_full)
 ```
 
+```{r}
+dim(train_targets)
+dim(test_targets)
+dim(val_targets)
+
+dim(train_data)
+dim(test_data)
+dim(val_data)
+
+
+```
+
 
 ## standardize data with z-score
 should be the same as sebs
@@ -245,7 +257,7 @@ model <- build_small_model()
 # Train it on the entirety of the data.
 model %>% fit(full_data, 
               full_targets,
-              epochs = 40, 
+              epochs = 70, 
               batch_size = 100,
               verbose = 1)
 
@@ -282,6 +294,7 @@ RMSE(predictions_mun, mun_targets)
 R2_Score(predictions_mun, mun_targets)
 MAE(predictions_mun, mun_targets)
 ```
+
 ```{r}
 model %>% summary()
 ```
